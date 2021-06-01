@@ -7,8 +7,7 @@
     >
 
     <component
-      :is="spec.part.name"
-      v-bind="spec.part.spec"
+      :is="'router-view'"
       />
     
   </v-container>

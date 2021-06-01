@@ -10,11 +10,19 @@
         >
 
       <template v-for="item in menu">
-        <div
+        <component
+          is="router-link"
+          :to="'/main/'+item.code"
           :key="item.code"
-          class="pqs-nav-menu">
-          <v-icon>mdi-{{ item.icon }}</v-icon> {{ item.title }}
-        </div>
+          class="vxg-router-link"
+          style="color:#000000DE; text-decoration:none;"
+          >
+          <div
+            class="pqs-nav-menu">
+            <v-icon>mdi-{{ item.icon }}</v-icon> {{ item.title }}
+          </div>
+        </component>
+
       </template>
 
       <div style="min-height:100px">
@@ -37,10 +45,24 @@
   </v-navigation-drawer>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+a.vxg-router-link {
+    color: black !important;
+    text-decoration: none !important;
+}
+</style>
 
 
 <script>
+/*
+<div
+          :key="item.code"
+          class="pqs-nav-menu">
+          <v-icon>mdi-{{ item.icon }}</v-icon> {{ item.title }}
+        </div>
+
+*/
+
 export default {
 
   props: {

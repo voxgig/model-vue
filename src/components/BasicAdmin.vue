@@ -1,5 +1,5 @@
 <template>
-<v-app id="app">
+<v-app xid="app">
 
   <vxg-basic-head
     :spec="spec.parts.head"
