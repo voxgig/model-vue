@@ -1,5 +1,5 @@
 <template>
-<v-app xid="app">
+<v-app id="app">
 
   <vxg-basic-head
     :spec="spec.parts.head"
@@ -8,11 +8,13 @@
 
   <vxg-basic-side
     :spec="spec.parts.side"
+    :logo="logo"
     />
 
   <vxg-basic-main
     :spec="spec.parts.main"
     />
+  
   <!--
   <vxg-basic-foot
     :spec="spec.parts.foot"

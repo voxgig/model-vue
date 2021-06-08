@@ -1,54 +1,71 @@
 <template>
   <v-navigation-drawer
     app
-    height="0"
+    class="vxg-side"
     >
-    <v-sheet
-        color="grey lighten-4"
-        class="pa-4"
-        style="border-right: 2px solid #ccc;height:100%"
-        >
+    <v-sheet style="display: flex; flex-direction: column; height:100%;">
+
+      <div style="display:inline;" v-html="logo">
+      </div>
 
       <template v-for="item in menu">
         <component
-          is="router-link"
+          :is="'router-link'"
           :to="'/main/'+item.code"
           :key="item.code"
-          class="vxg-router-link"
-          style="color:#000000DE; text-decoration:none;"
+          :class="item.klass"
+          style="flex-grow:1;"
           >
-          <div
-            class="pqs-nav-menu">
-            <v-icon>mdi-{{ item.icon }}</v-icon> {{ item.title }}
-          </div>
+          <v-icon>mdi-{{ item.icon }}</v-icon> {{ item.title }}
         </component>
 
       </template>
 
-      <div style="min-height:100px">
-        &nbsp;
-      </div>
-      
-      
+
+      <div style="flex-grow:100;"></div>
       <v-divider></v-divider>
+
       
-      <div class="pqs-nav-menu">
-        <v-icon>mdi-lifebuoy</v-icon> Support
-      </div>
-
-      <div style="min-height:100vh">
-        &nbsp;
-      </div>
-
+      <a href="#/main/asset" class="vxg-router-link"><i aria-hidden="true" class="v-icon notranslate mdi mdi-help theme--light"></i> Support </a>
+      <a href="#/main/asset" class="vxg-router-link"><i aria-hidden="true" class="v-icon notranslate mdi mdi-logout-variant theme--light"></i> Sign out </a>
       
     </v-sheet>
   </v-navigation-drawer>
 </template>
 
 <style lang="scss">
+nav.vxg-side {
+    background-color: rgb(var(--vxg-cb1)) !important;
+
+    .v-sheet {
+        background-color: rgb(var(--vxg-cb1)) !important;
+    }
+
+    .v-divider {
+        border-color: rgb(var(--vxg-ct2)) !important;
+        margin: 16px 8px;
+    }
+}
 a.vxg-router-link {
-    color: black !important;
+    display: block;
+    margin: 0px 8px;
+    padding: 16px 8px;
     text-decoration: none !important;
+    color: rgb(var(--vxg-ct1)) !important;
+    border-radius: 8px;
+    
+    .v-icon {
+        color: rgb(var(--vxg-ct2)) !important;
+    }
+    
+    &.router-link-active {
+        background-color: rgb(var(--vxg-cb2)) !important;
+        color: rgb(var(--vxg-ct1)) !important;
+        .v-icon {
+            color: rgb(var(--vxg-ct1)) !important;
+        }
+    }
+
 }
 </style>
 
@@ -63,13 +80,15 @@ a.vxg-router-link {
 
 */
 
+
 export default {
 
   props: {
     spec: {
       type: Object,
       required: true,
-    }
+    },
+    logo: String,
   },
   
   data () {
@@ -80,9 +99,19 @@ export default {
 
   computed: {
     menu () {
-      let items = this.spec.menu.items
-      return this.spec.menu.order.split(/,/)
-        .reduce((a,c)=>(items[c].code = c,a.push(items[c]),a),[])
+      let active_item_code = this.$route.meta.view
+      let spec_items = this.spec.menu.items
+      let ordered_codes = this.spec.menu.order.split(/\s*,\s*/)
+      let ux_items =
+          ordered_codes
+          .reduce((a,c)=>(a.push(Object.assign({code:c},spec_items[c])),a),[])
+          .map(item=>{
+            item.klass = Object.assign({
+              'vxg-router-link': true,
+            })
+            return item
+          })
+      return ux_items
     }
   }
 

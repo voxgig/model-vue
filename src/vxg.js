@@ -8,29 +8,39 @@ import VxgBasicMain from './components/BasicMain.vue'
 import VxgBasicSide from './components/BasicSide.vue'
 
 
-const Vxg = {
-  // names of components found and loaded
-  found: []
+const config_defaults = {
 }
 
-Vxg.install = function(Vue, options) {
-  
 
-  
-  var co = {
+class Vxg {
 
-    VxgBasicAdmin,
-    VxgBasicHead,
-    VxgBasicFoot,
-    VxgBasicMain,
-    VxgBasicSide,
+  constructor(config) {
+    this.cmp = {}
+    this.config(config)
+  }
+  
+  config(custom_config) {
+    // TODO: deep, validation
+    Object.assign(this.config, config_defaults, custom_config||{})
   }
 
-  // These components are automatically added as global components.
-  Object.keys(co).forEach(name => {
-    Vue.component(name, co[name])
-    Vxg.found.push(name)
-  })
+  install(Vue, options) {
+  
+    var co = {
+      VxgBasicAdmin,
+      VxgBasicHead,
+      VxgBasicFoot,
+      VxgBasicMain,
+      VxgBasicSide,
+    }
+    
+    Object.keys(co).forEach(name => {
+      Vue.component(name, co[name])
+      this.cmp[name] = co[name]
+    })
+    
+    Vue.prototype.$vxg = this
+  }
 }
 
 

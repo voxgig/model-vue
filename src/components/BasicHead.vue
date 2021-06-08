@@ -1,20 +1,50 @@
 <template>
-<v-app-bar app clipped-left style="height:64px;">
+<v-app-bar app style="height:64px;background-color:white;">
 
+    <v-btn
+      tile
+      class="vxg-head-btn"
+      >
+      <v-icon left medium>
+        mdi-map-marker-path
+      </v-icon>
+      Add Asset
+    </v-btn>
+    
+  <v-divider vertical style="margin:0px 16px;"></v-divider>
+  
+  <!--
   <div style="display:inline;" v-html="logo">
    
   </div>
 
+
+  
   <v-spacer></v-spacer>
+
+
+  <v-icon >mdi-bell</v-icon>
   
-  <v-icon size="large" style="color:white;">mdi-bell</v-icon>
-  
-  <v-icon style="color:white;">mdi-logout</v-icon>
-  
+  <v-icon >mdi-logout</v-icon>
+-->
+
 </v-app-bar>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.vxg-head-btn {
+
+    height: 100%;
+    background-color: white !important;
+    color: rgb(var(--vxg-ct0));
+    text-transform: none !important;
+    box-shadow: none !important;
+    
+    .v-icon {
+        color: rgb(var(--vxg-ci0)) !important;
+    }
+}
+</style>
 
 <script>
 export default {
