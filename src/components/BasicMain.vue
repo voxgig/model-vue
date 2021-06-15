@@ -1,12 +1,14 @@
 <template>
 <v-main app>
   <v-container
-    class="py-5 px-5"
+    xclass="py-5 px-5"
+    style="padding:0px;"
     fluid
     >
 
     <component
       :is="'router-view'"
+      :spec="view_spec"
       />
   </v-container>
 </v-main>
@@ -23,8 +25,19 @@ export default {
     }
   },
   
-  data: () => ({
-  }),
+  data () {
+    return {
+    }
+  },
+
+  computed: {
+    view_spec() {
+      let viewname = this.$route.meta.view
+      let spec = this.$model.main.app.web.view[viewname].spec
+      console.log('VIEW SPEC', spec)
+      return spec
+    }
+  }
 };
 
 </script>

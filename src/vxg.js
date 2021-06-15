@@ -7,6 +7,8 @@ import VxgBasicFoot from './components/BasicFoot.vue'
 import VxgBasicMain from './components/BasicMain.vue'
 import VxgBasicSide from './components/BasicSide.vue'
 
+import VxgBasicLed from './components/BasicLed.vue'
+
 
 const config_defaults = {
 }
@@ -32,6 +34,8 @@ class Vxg {
       VxgBasicFoot,
       VxgBasicMain,
       VxgBasicSide,
+
+      VxgBasicLed,
     }
     
     Object.keys(co).forEach(name => {
@@ -40,6 +44,8 @@ class Vxg {
     })
     
     Vue.prototype.$vxg = this
+
+    window.vxg = this
   }
 }
 
