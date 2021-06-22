@@ -71,15 +71,6 @@ a.vxg-router-link {
 
 
 <script>
-/*
-<div
-          :key="item.code"
-          class="pqs-nav-menu">
-          <v-icon>mdi-{{ item.icon }}</v-icon> {{ item.title }}
-        </div>
-
-*/
-
 
 export default {
 
@@ -97,6 +88,10 @@ export default {
     }
   },
 
+  created () {
+    console.log('BasicSide created', this.spec )
+  },
+  
   computed: {
     menu () {
       let active_item_code = this.$route.meta.view

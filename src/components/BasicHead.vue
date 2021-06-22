@@ -4,11 +4,12 @@
     <v-btn
       tile
       class="vxg-head-btn"
+      @click="addItem"
       >
       <v-icon left medium>
         mdi-map-marker-path
       </v-icon>
-      Add Asset
+      Add Item
     </v-btn>
     
   <v-divider vertical style="margin:0px 16px;"></v-divider>
@@ -57,6 +58,12 @@ export default {
 
   mounted () {
     console.log('BasicHead', this)
+  },
+
+  methods: {
+    addItem () {
+      this.$store.dispatch('trigger_led_add')
+    }
   }
 };
 </script>

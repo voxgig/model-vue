@@ -57,13 +57,22 @@
           v-model="item[field.name]"
           outlined
           ></v-select>
+
+        <v-text-field
+          v-if="'datetime'===field.type"
+          :label="field.title"
+          v-model="readitem[field.name]"
+          outlined
+          disabled
+          ></v-text-field>
+
         
       </div>
     </div>
     <v-toolbar flat>
       <v-btn outlined @click="closeItem">Cancel</v-btn>
       <v-spacer />
-      <v-btn outlined @click="closeItem">Save</v-btn>
+      <v-btn outlined @click="saveItem">Save</v-btn>
     </v-toolbar>
   </div>
 </div>
@@ -84,15 +93,18 @@ export default {
       type: Object,
       required: true,
     },
+    /*
     rows: {
       type: Array,
       required: true,
     }
+*/
   },
 
   data () {
     return {
       item: null,
+      readitem: null,
       show: {
         table: true,
         item: false,
@@ -100,6 +112,18 @@ export default {
     }
   },
 
+  created () {
+    this.$store.dispatch('list_'+this.spec.ent.store_name)
+  },
+
+  watch: {
+    '$store.state.trigger.led.add' () {
+      this.openItem({
+        last: Date.now()
+      })
+    }
+  },
+  
   computed: {
     headers () {
       return Object.entries(this.spec.ent.primary.field)
@@ -112,7 +136,8 @@ export default {
     },
 
     items () {
-      return this.rows
+      //return this.rows
+      return this.$store.state[this.spec.ent.store_name]
     },
 
     fields () {
@@ -156,8 +181,19 @@ export default {
       
       this.item = selitem
 
+      this.readitem = {...this.item}
+
+      // TODO: from spec!
+      this.readitem.last = this.formatdate(this.item.last)
+      
       this.show.table = false
       this.show.item = true
+    },
+
+    saveItem () {
+      this.$store.dispatch('save_'+this.spec.ent.store_name, this.item)
+      this.show.table = true
+      this.show.item = false
     },
 
     closeItem () {
@@ -169,6 +205,10 @@ export default {
       return {
         'flex-basis': (100*field.size/12)+'%',
       }
+    },
+
+    formatdate(time) {
+      return new Date(time).toString()
     },
   }
 }
