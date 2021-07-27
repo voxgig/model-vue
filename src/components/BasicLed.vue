@@ -2,10 +2,11 @@
 <div>
   <v-data-table
     v-if="show.table"
+    dense
     :headers="headers"
     :items="items"
     :items-per-page="25"
-    dense
+    x-custom-filter="customFilter"
     :footer-props="{
                    itemsPerPageOptions:[25,50,75,100,-1]
                    }"
@@ -23,7 +24,7 @@
             :color="'outofdate'===item[header.value]?'red':'suspended'===item[header.value]?'orange':'blue'"
             style="font-weight:bold;color:white;"
             >
-            {{ header.kind[item[header.value]].title }}
+            {{ (header.kind[item[header.value]]||{}).title }}
           </v-chip>
         </span>
         <span v-else-if="'datetime'===header.type">
@@ -35,6 +36,11 @@
     
   </v-data-table>
   <div v-if="show.item" >
+    <v-toolbar flat v-if="showEditToolbar">
+      <v-btn outlined @click="customAction('user_reset_password')">Reset Password</v-btn>
+      <v-spacer />
+    </v-toolbar>
+
     <div style="box-sizing: border-box; display: flex;flex-flow: row wrap;">
       <div
         v-for="(field,fI) in fields"
@@ -56,6 +62,7 @@
           :label="field.title"
           v-model="item[field.name]"
           outlined
+          :disabled="field.readonly"
           ></v-select>
 
         <v-text-field
@@ -66,7 +73,12 @@
           disabled
           ></v-text-field>
 
-        
+        <vxg-basic-led
+          v-if="'basicled'===field.type"
+          :spec="field.spec"
+          :param="{item:item}"
+          ></vxg-basic-led>
+          
       </div>
     </div>
     <v-toolbar flat>
@@ -87,18 +99,19 @@
 </style>
 
 <script>
+
+console.log('BASICLED')
+
 export default {
   props: {
     spec: {
       type: Object,
       required: true,
     },
-    /*
-    rows: {
-      type: Array,
-      required: true,
+    param: {
+      type: Object,
+      default: ()=>{}
     }
-*/
   },
 
   data () {
@@ -113,11 +126,13 @@ export default {
   },
 
   created () {
+    console.log('BasicLed CREATE', 'list_'+this.spec.ent.store_name)
     this.$store.dispatch('list_'+this.spec.ent.store_name)
   },
 
   watch: {
     '$store.state.trigger.led.add' () {
+      console.log('LED ADD', this.spec)
       this.openItem({
         last: Date.now()
       })
@@ -126,18 +141,35 @@ export default {
   
   computed: {
     headers () {
-      return Object.entries(this.spec.ent.primary.field)
-        .map(([fn,fd])=>({
+      let headermap = {}
+      Object.entries(this.spec.ent.primary.field)
+        .forEach(([fn,fd])=>headermap[fn]={
           value:fn,
           text:fd.title,
           type:fd.type,
           kind:fd.kind||{},
-        }))
+        })
+
+      let headers =
+          (this.spec.list.layout.order ?
+           this.spec.list.layout.order.split(/\s*,\s*/) :
+           Object.keys(this.spec.ent.primary.field)
+           )
+          .map(fn=>headermap[fn])
+          .filter(h=>null!=h)
+      
+      return headers
     },
 
     items () {
-      //return this.rows
-      return this.$store.state[this.spec.ent.store_name]
+      let items = this.$store.state[this.spec.ent.store_name]
+
+      if('user-by-role' === this.spec.name) {
+        items = items.filter(item=>this.param.item.role===item.profile)
+        //items = items.filter(item=>'op'===item.profile)
+      }
+
+      return items
     },
 
     fields () {
@@ -146,18 +178,42 @@ export default {
         let fns = this.spec.edit.layout.order.split(/,/)
         for(let fn of fns) {
           // TODO: remove when model fixed
-          let fd = {...this.spec.ent.primary.field[fn]}
+          // TODO: handle virtual/derived fields cleanly
+          let fd = {...this.spec.ent.primary.field[fn]} || {}
           fd.name = fn
-          fd.size = this.spec.edit.layout.field[fn].size 
+          
+          //fd.size = this.spec.edit.layout.field[fn].size 
+          fd = { ...fd, ...(this.spec.edit.layout.field[fn]||{}) }
+
           fds.push(fd)
         }
         return fds
       }
       catch(e) {
-        console.log(e)
+        console.error(e)
       }
       return []
-    }
+    },
+
+    showEditToolbar() {
+      let active = this.spec.edit.layout.toolbar.active
+      if(true === active) {
+        return active
+      }
+      else if(active && active.field) {
+        let show = true
+        for( let [name, criteria] of Object.entries(active.field)) {
+          if('not-empty'===criteria) {
+            show = show && (null != this.item[name])
+          }
+          else {
+            show = false
+          }
+        }
+        return show
+      }
+      return false
+    },
   },
 
 
@@ -167,13 +223,18 @@ export default {
     },
 
     selection (field) {
-      let selects =  Object.entries(field.kind).map(([n,d])=>({text:d.title,value:n}))
-      console.log('selects', field, selects)
+      let kinds = field.kind && Object.entries(field.kind) 
+      let selects = kinds ? kinds.map(([n,d])=>({text:d.title,value:n})) : []
+      // console.log('selects', field, selects)
       return selects
     },
 
+    customAction (action) {
+      this.$store.dispatch(action, this.item)
+    },
+
     openItem (selitem) {
-      console.log('OPEN', selitem)
+      // console.log('OPEN', selitem)
       
       if(false === this.spec.edit.active) {
         return
@@ -210,6 +271,13 @@ export default {
     formatdate(time) {
       return new Date(time).toString()
     },
+
+
+    customFilter (value,search,item) {
+      console.log('BasicLed customFilter', value, search, item)
+      return true
+    },
+
   }
 }
 </script>
