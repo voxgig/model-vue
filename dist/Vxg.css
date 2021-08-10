@@ -42,6 +42,10 @@ a.vxg-router-link.router-link-active {
 a.vxg-router-link.router-link-active .v-icon {
   color: rgb(var(--vxg-ct1)) !important;
 }
+.vxg-side-open {
+  width: 48px;
+  height: 48px;
+}
 .vxg-form-field {
   padding: 8px;
   -webkit-box-sizing: border-box;

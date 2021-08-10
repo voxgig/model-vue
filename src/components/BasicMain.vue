@@ -1,7 +1,6 @@
 <template>
 <v-main app>
   <v-container
-    xclass="py-5 px-5"
     style="padding:0px;"
     fluid
     >
@@ -34,7 +33,7 @@ export default {
     view_spec() {
       let viewname = this.$route.meta.view
       let spec = this.$model.main.app.web.view[viewname].spec
-      console.log('VIEW SPEC', spec)
+      // console.log('VIEW SPEC', spec)
       return spec
     }
   }

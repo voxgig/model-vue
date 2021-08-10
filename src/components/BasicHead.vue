@@ -1,7 +1,20 @@
 <template>
 <v-app-bar app style="height:64px;background-color:white;">
 
+  <v-icon
+    v-if="!drawerOpen"
+    large
+    @click="openDrawer"
+    style="display:inline-block;"
+    light
+    >mdi-chevron-right</v-icon>
+
+  <v-divider
+    v-if="!drawerOpen"
+    vertical style="margin:0px 16px;"></v-divider>
+  
   <v-btn
+    v-if="show('add')"
     tile
     class="vxg-head-btn"
     @click="addItem"
@@ -9,7 +22,7 @@
     <v-icon left medium>
       mdi-map-marker-path
     </v-icon>
-    Add Item
+    Add {{ itemName }}
   </v-btn>
   
   <v-divider vertical style="margin:0px 16px;"></v-divider>
@@ -74,13 +87,41 @@ export default {
   watch: {
     search () {
       this.$store.dispatch('trigger_search', {term:this.search})
+    },
+    '$store.vxg.cmp.BasicHead.allow.add': {
+      handler() {
+        this.$forceUpdate()
+      }
+    }
+  },
+  
+  computed: {
+    drawerOpen() {
+      return this.$store.state.vxg.cmp.BasicSide.show
+    },
+    itemName() {
+      return this.$store.state.vxg.ent.meta.name
     }
   },
   
   methods: {
     addItem () {
       this.$store.dispatch('trigger_led_add')
-    }
+    },
+
+    show(action) {
+      return this.allow(action) && this.$store.state.vxg.cmp.BasicHead.show[action]
+    },
+    
+    allow(action) {
+      if('add' === action) {
+        return this.$store.state.vxg.cmp.BasicHead.allow.add
+      }
+      return true
+    },
+    openDrawer() {
+      this.$store.dispatch('set_cmp_flags',{name:'BasicSide', flags:{show:true}})
+    },
   }
 };
 </script>

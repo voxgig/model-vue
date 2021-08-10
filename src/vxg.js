@@ -1,3 +1,6 @@
+import Patrun from 'patrun'
+import Jsonic from 'jsonic'
+
 import './vxg.scss'
 
 
@@ -14,18 +17,52 @@ const config_defaults = {
 }
 
 
+const util = {
+
+}
+
+
 class Vxg {
 
   constructor(config) {
+    this.match = {
+      allow: new Patrun({gex:true})
+    }
     this.cmp = {}
     this.config(config)
+    this.util = util
   }
   
   config(custom_config) {
     // TODO: deep, validation
     Object.assign(this.config, config_defaults, custom_config||{})
+
+    this.config.allow = this.config.allow || {}
+    this.config.allow.modify = this.config.allow.modify || ((x)=>x)
+    for(let entry of this.config.allow.match) {
+      if(entry.match) {
+        this.match.allow.add(entry.match, {allow:true})
+      }
+    }
   }
 
+
+  allow(match) {
+    let mm = Jsonic(match)
+    let ms = Object.keys(mm).map(x=>mm[x])
+    let found = null
+
+    for(let m of ms) {
+      let pat = this.config.allow.modify({...m||{}})
+      found = this.match.allow.find(pat)
+      console.log('VXG allow',JSON.stringify(m),pat,found)
+      if(found) { break }
+    }
+
+    return found ? !!found.allow : false
+  }
+
+  
   install(Vue, options) {
   
     var co = {

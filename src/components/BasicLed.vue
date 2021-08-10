@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="allow('list')">
   <v-data-table
     v-if="show.table"
     dense
@@ -11,6 +11,8 @@
                    itemsPerPageOptions:[25,50,75,100,-1]
                    }"
     @click:row="openItem"
+    :sort-by.sync="sortBy"
+    :sort-desc.sync="sortDesc"
     >
 
     <template
@@ -54,6 +56,7 @@
           :label="field.title"
           v-model="item[field.name]"
           outlined
+          :disabled="field.readonly || !allow('edit')"
           ></v-text-field>
         
         <v-select
@@ -62,7 +65,7 @@
           :label="field.title"
           v-model="item[field.name]"
           outlined
-          :disabled="field.readonly"
+          :disabled="field.readonly || !allow('edit')"
           ></v-select>
 
         <v-text-field
@@ -84,7 +87,7 @@
     <v-toolbar flat>
       <v-btn outlined @click="closeItem">Cancel</v-btn>
       <v-spacer />
-      <v-btn outlined @click="saveItem">Save</v-btn>
+      <v-btn outlined @click="saveItem" v-if="allow('edit')">Save</v-btn>
     </v-toolbar>
   </div>
 </div>
@@ -122,6 +125,8 @@ export default {
         table: true,
         item: false,
       },
+      sortBy:'when',
+      sortDesc:true,
     }
   },
 
@@ -136,6 +141,19 @@ export default {
       this.openItem({
         last: Date.now()
       })
+    },
+    '$route': {
+      immediate: true,
+      handler() {
+        this.$store.dispatch(
+          'set_cmp_flags',
+          {name:'BasicHead', flags:{
+            show:{add:this.spec.edit.active},
+            allow:{add:this.allow('edit')}}}
+        )
+        this.$store.dispatch('set_ent_meta',
+                             {name:this.spec.ent.primary.name||'Item'})
+      }
     }
   },
   
@@ -236,7 +254,7 @@ export default {
     openItem (selitem) {
       // console.log('OPEN', selitem)
       
-      if(false === this.spec.edit.active) {
+      if(false === this.spec.edit.active) { // || !this.allow('edit')) {
         return
       }
       
@@ -278,6 +296,15 @@ export default {
       return true
     },
 
+    allow(action) {
+      let out = true
+      let match = this.spec[action].allow
+      if(match) {
+        out = this.$vxg.allow({0:match})
+        console.log('VXG BasicLed allow', out, match)
+      }
+      return out
+    }
   }
 }
 </script>
