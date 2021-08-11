@@ -1,0 +1,56 @@
+{
+  "sys": {
+    "shape": {
+      "app": {
+        "parts": {}
+      },
+      "part": {
+        "img": {}
+      }
+    },
+    "app": {
+      "web": {
+        "basic": {
+          "name": "basic",
+          "layout": "BasicAdmin",
+          "parts": {
+            "head": {
+              "part": "BasicHead"
+            },
+            "side": {
+              "part": "BasicSide"
+            },
+            "main": {
+              "part": "BasicMain"
+            },
+            "foot": {
+              "part": "BasicFoot"
+            }
+          }
+        }
+      }
+    }
+  },
+  "main": {
+    "app": {
+      "web": {
+        "name": "basic",
+        "layout": "BasicAdmin",
+        "parts": {
+          "head": {
+            "part": "BasicHead"
+          },
+          "side": {
+            "part": "BasicSide"
+          },
+          "main": {
+            "part": "BasicMain"
+          },
+          "foot": {
+            "part": "BasicFoot"
+          }
+        }
+      }
+    }
+  }
+}

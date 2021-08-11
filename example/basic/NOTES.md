@@ -2,12 +2,12 @@
 
 ## Setup
 
-10. 
+### 10. 
 ```
 $ vue create basic
 ```
 
-20. 
+### 20. 
 
 Move all packages to devDependencies. Add:
 ```
@@ -19,7 +19,7 @@ Move all packages to devDependencies. Add:
 ```
 
 
-30.
+### 30.
 
 Setup public and account pages:
 * rename src/main.js to src/index.js
@@ -32,3 +32,12 @@ module.exports = {
   }
 }
 ```
+
+
+### 40. 
+Refactor file names: https://github.com/voxgig/model-vue/commit/dc5858ae11d8c34083ea65bd2e8df1c3c461bc88
+
+
+
+
+
