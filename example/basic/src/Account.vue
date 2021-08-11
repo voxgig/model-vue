@@ -1,11 +1,8 @@
 <template>
-<div>ACCOUNT
-  <!--
 <vxg-basic-admin
   @action="action"
   />
--->
-  </div>
+</v-app>
 </template>
 
 <style lang="scss">
@@ -16,6 +13,9 @@ export default {
   methods: {
     action(details) {
       console.log('Account action', details)
+      if('BasicHead'===details.part && 'avatar'===details.event) {
+        this.$router.push('profile')
+      }
     }
   }
 }

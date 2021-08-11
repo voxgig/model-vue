@@ -23,7 +23,7 @@
         <component
           v-if="allow(item)"
           :is="'router-link'"
-          :to="'/main/'+item.code"
+          :to="item.code"
           :key="item.code"
           :class="item.klass"
           style="flex-grow:1;"
@@ -111,6 +111,7 @@ export default {
   
   computed: {
     menu () {
+      
       let active_item_code = this.$route.meta.view
       let spec_items = this.spec.menu.items
       let ordered_codes = this.spec.menu.order.split(/\s*,\s*/)
@@ -135,7 +136,7 @@ export default {
 
   methods: {
     allow(item) {
-      let out = this.$vxg.allow( item.allow || {} )
+      let out = (item && item.allow) ? this.$vxg.allow( item.allow ) : true
       console.log('VXG BasicSide allow', item, out)
       return out
     },

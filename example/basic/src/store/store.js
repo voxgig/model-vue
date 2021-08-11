@@ -1,12 +1,43 @@
-import Vue from 'vue'
 import Vuex from 'vuex'
 
-Vue.use(Vuex)
 
-function makeStore() {
+function makeStore(Vue) {
+  Vue.use(Vuex)
+  
   return new Vuex.Store({
     state: {
+
+      vxg: {
+        ent: {
+          meta: {
+            name: 'Item'
+          }
+        },
+        cmp: {
+          BasicSide: {
+            show: true
+          },
+          BasicHead: {
+            allow: {
+              add: true
+            },
+            show: {
+              add: true
+            },
+          }
+        }
+      },
+      trigger: {
+        led: {
+          add: 0
+        },
+        search: {
+          term: ''
+        },
+      },
+
     },
+    
     mutations: {
     },
     actions: {

@@ -4,6 +4,7 @@
   <vxg-basic-head
     :spec="spec.parts.head"
     :logo="logo"
+    @action="action('BasicHead', $event)"
     />
 
   <vxg-basic-side
@@ -16,12 +17,12 @@
   <vxg-basic-main
     :spec="spec.parts.main"
     />
+
   
-  <!--
   <vxg-basic-foot
     :spec="spec.parts.foot"
     />
--->
+
 </v-app>
 </template>
 
@@ -36,8 +37,8 @@ export default {
     }
   },
 
-  mounted () {
-    // console.log('BasicAdmin', !!this.$vuetify)
+  created () {
+    console.log('BasicAdmin', this.$vuetify)
   },
 
   computed: {

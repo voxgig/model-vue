@@ -38,6 +38,10 @@ module.exports = {
 Refactor file names: https://github.com/voxgig/model-vue/commit/dc5858ae11d8c34083ea65bd2e8df1c3c461bc88
 
 
+### 50.
+Add model: https://github.com/voxgig/model-vue/commit/36473c988c7a65dcfa8b29b773e1e9266d633c0d
+
+
 
 
 

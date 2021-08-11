@@ -9,9 +9,7 @@ import VxgBasicHead from './components/BasicHead.vue'
 import VxgBasicFoot from './components/BasicFoot.vue'
 import VxgBasicMain from './components/BasicMain.vue'
 import VxgBasicSide from './components/BasicSide.vue'
-
 import VxgBasicLed from './components/BasicLed.vue'
-
 
 const config_defaults = {
 }
@@ -39,6 +37,8 @@ class Vxg {
 
     this.config.allow = this.config.allow || {}
     this.config.allow.modify = this.config.allow.modify || ((x)=>x)
+    this.config.allow.match = this.config.allow.match || []
+    
     for(let entry of this.config.allow.match) {
       if(entry.match) {
         this.match.allow.add(entry.match, {allow:true})
@@ -67,6 +67,7 @@ class Vxg {
   
     var co = {
       VxgBasicAdmin,
+
       VxgBasicHead,
       VxgBasicFoot,
       VxgBasicMain,
@@ -83,6 +84,8 @@ class Vxg {
     Vue.prototype.$vxg = this
 
     window.vxg = this
+
+    console.log('VXG INSTALL', this)
   }
 }
 

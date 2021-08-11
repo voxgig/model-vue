@@ -2,7 +2,7 @@
 <v-app-bar app style="height:64px;background-color:white;">
 
   <v-icon
-    v-if="!drawerOpen"
+    v-if="!drawerOpen && tool.expandSide.active"
     large
     @click="openDrawer"
     style="display:inline-block;"
@@ -10,11 +10,12 @@
     >mdi-chevron-right</v-icon>
 
   <v-divider
-    v-if="!drawerOpen"
+    v-if="!drawerOpen && tool.expandSide.active"
     vertical style="margin:0px 16px;"></v-divider>
+
   
   <v-btn
-    v-if="show('add')"
+    v-if="show('add') && tool.add.active"
     tile
     class="vxg-head-btn"
     @click="addItem"
@@ -25,9 +26,13 @@
     Add {{ itemName }}
   </v-btn>
   
-  <v-divider vertical style="margin:0px 16px;"></v-divider>
+  <v-divider
+    v-if="show('add') && tool.add.active"
+    vertical style="margin:0px 16px;"></v-divider>
+
 
   <v-text-field
+    v-if="tool.search.active"
     v-model="search"
     flat
     hide-details
@@ -36,21 +41,19 @@
     placeholder="Search"
     ></v-text-field>
 
-  
-  <!--
-  <div style="display:inline;" v-html="logo">
-   
-  </div>
 
+  <v-spacer
+    v-if="tool.avatar.active"
+    ></v-spacer>
 
-  
-  <v-spacer></v-spacer>
+  <v-icon
+    v-if="tool.avatar.active"
+    large
+    @click="action('avatar')"
+    style="display:inline-block;"
+    light
+    >mdi-account</v-icon>
 
-
-  <v-icon >mdi-bell</v-icon>
-  
-  <v-icon >mdi-logout</v-icon>
--->
 
 </v-app-bar>
 </template>
@@ -81,7 +84,7 @@ export default {
   },
 
   mounted () {
-    console.log('BasicHead', this)
+    // console.log('BasicHead', this)
   },
 
   watch: {
@@ -101,6 +104,12 @@ export default {
     },
     itemName() {
       return this.$store.state.vxg.ent.meta.name
+    },
+    tool() {
+      // TODO: better if main.app.web.parts.head was provided directly
+      let tool = this.$model.main.app.web.parts.head.tool
+      console.log('HEAD TOOL', tool)
+      return tool
     }
   },
   
@@ -122,6 +131,10 @@ export default {
     openDrawer() {
       this.$store.dispatch('set_cmp_flags',{name:'BasicSide', flags:{show:true}})
     },
+
+    action(name) {
+      this.$emit('action', name)
+    }
   }
 };
 </script>
