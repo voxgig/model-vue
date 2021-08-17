@@ -148,7 +148,10 @@ export default {
         this.$store.dispatch(
           'set_cmp_flags',
           {name:'BasicHead', flags:{
-            show:{add:this.spec.edit.active},
+            show:{
+              add:this.spec.edit.active,
+              search:this.spec.search?.active,
+            },
             allow:{add:this.allow('edit')}}}
         )
         this.$store.dispatch('set_ent_meta',

@@ -55,7 +55,7 @@ class Vxg {
     for(let m of ms) {
       let pat = this.config.allow.modify({...m||{}})
       found = this.match.allow.find(pat)
-      console.log('VXG allow',JSON.stringify(m),pat,found)
+      // console.log('VXG allow',JSON.stringify(m),pat,found)
       if(found) { break }
     }
 
@@ -85,7 +85,7 @@ class Vxg {
 
     window.vxg = this
 
-    console.log('VXG INSTALL', this)
+    // console.log('VXG INSTALL', this)
   }
 }
 

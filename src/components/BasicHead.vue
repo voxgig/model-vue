@@ -32,7 +32,7 @@
 
 
   <v-text-field
-    v-if="tool.search.active"
+    v-if="tool.search.active && show('search')"
     v-model="search"
     flat
     hide-details
@@ -43,7 +43,7 @@
 
 
   <v-spacer
-    v-if="tool.avatar.active"
+    v-if="tool.avatar.active || tool.expandMain.active"
     ></v-spacer>
 
   <v-icon
@@ -53,6 +53,21 @@
     style="display:inline-block;"
     light
     >mdi-account</v-icon>
+
+
+  <v-divider
+    v-if="!detailOpen && tool.expandMain.active"
+    vertical style="margin:0px 16px;"></v-divider>
+
+
+  <v-icon
+    v-if="!detailOpen && tool.expandMain.active"
+    large
+    @click="closeDetail"
+    style="display:inline-block;"
+    light
+    >mdi-chevron-left</v-icon>
+
 
 
 </v-app-bar>
@@ -102,13 +117,15 @@ export default {
     drawerOpen() {
       return this.$store.state.vxg.cmp.BasicSide.show
     },
+    detailOpen() {
+      return !this.$store.state.vxg.cmp.BasicMain.show
+    },
     itemName() {
       return this.$store.state.vxg.ent.meta.name
     },
     tool() {
       // TODO: better if main.app.web.parts.head was provided directly
       let tool = this.$model.main.app.web.parts.head.tool
-      console.log('HEAD TOOL', tool)
       return tool
     }
   },
@@ -130,6 +147,9 @@ export default {
     },
     openDrawer() {
       this.$store.dispatch('set_cmp_flags',{name:'BasicSide', flags:{show:true}})
+    },
+    closeDetail() {
+      this.$store.dispatch('set_cmp_flags',{name:'BasicMain', flags:{show:false}})
     },
 
     action(name) {
