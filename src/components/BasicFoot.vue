@@ -12,7 +12,7 @@ export default {
   },
 
   created () {
-    console.log('BasicFoot', !!this.$vuetify, !!this.$model)
+    // console.log('BasicFoot', !!this.$vuetify, !!this.$model)
   }
 }
 </script>

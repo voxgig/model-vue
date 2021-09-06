@@ -103,7 +103,7 @@
 
 <script>
 
-console.log('BASICLED')
+// console.log('BASICLED')
 
 export default {
   props: {
@@ -131,13 +131,13 @@ export default {
   },
 
   created () {
-    console.log('BasicLed CREATE', 'list_'+this.spec.ent.store_name)
+    // console.log('BasicLed CREATE', 'list_'+this.spec.ent.store_name)
     this.$store.dispatch('list_'+this.spec.ent.store_name)
   },
 
   watch: {
     '$store.state.trigger.led.add' () {
-      console.log('LED ADD', this.spec)
+      // console.log('LED ADD', this.spec)
       this.openItem({
         last: Date.now()
       })
@@ -185,6 +185,7 @@ export default {
     items () {
       let items = this.$store.state[this.spec.ent.store_name]
 
+      // TODO: generalize
       if('user-by-role' === this.spec.name) {
         items = items.filter(item=>this.param.item.role===item.profile)
         //items = items.filter(item=>'op'===item.profile)
@@ -295,7 +296,7 @@ export default {
 
 
     customFilter (value,search,item) {
-      console.log('BasicLed customFilter', value, search, item)
+      // console.log('BasicLed customFilter', value, search, item)
       return true
     },
 
@@ -304,7 +305,7 @@ export default {
       let match = this.spec[action].allow
       if(match) {
         out = this.$vxg.allow({0:match})
-        console.log('VXG BasicLed allow', out, match)
+        // console.log('VXG BasicLed allow', out, match)
       }
       return out
     }

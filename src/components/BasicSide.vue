@@ -23,7 +23,7 @@
         <component
           v-if="allow(item)"
           :is="'router-link'"
-          :to="item.code"
+          :to="'/'+item.code"
           :key="item.code"
           :class="item.klass"
           style="flex-grow:1;"
