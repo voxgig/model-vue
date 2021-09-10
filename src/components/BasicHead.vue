@@ -115,10 +115,10 @@ export default {
   
   computed: {
     drawerOpen() {
-      return this.$store.state.vxg.cmp.BasicSide.show
+      return this.$store.state.vxg.cmp.BasicSide?.show
     },
     detailOpen() {
-      return !this.$store.state.vxg.cmp.BasicMain.show
+      return !this.$store.state.vxg.cmp.BasicMain?.show
     },
     itemName() {
       return this.$store.state.vxg.ent.meta.name
