@@ -33,7 +33,6 @@ export default {
     view_spec() {
       let viewname = this.$route.meta.view || this.$model.main.app.web.defaults.view 
       let spec = this.$model.main.app.web.view[viewname].spec
-      // console.log('VIEW SPEC', viewname, spec)
       return spec
     }
   }

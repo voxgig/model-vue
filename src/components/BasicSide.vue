@@ -106,7 +106,6 @@ export default {
   },
 
   created () {
-    // console.log('BasicSide created', this.spec )
   },
   
   computed: {
@@ -125,7 +124,6 @@ export default {
             return item
           })
 
-      // console.log('VXG BasicSide menu', ux_items)
       return ux_items
     },
 
@@ -137,7 +135,6 @@ export default {
   methods: {
     allow(item) {
       let out = (item && item.allow) ? this.$vxg.allow( item.allow ) : true
-      // console.log('VXG BasicSide allow', item, out)
       return out
     },
     openDrawer() {
@@ -147,7 +144,6 @@ export default {
       this.$store.dispatch('set_cmp_flags',{name:'BasicSide', flags:{show:false}})
     },
     action(name) {
-      // console.log('BasicSide action',name)
       this.$emit('action', name)
     }
   }

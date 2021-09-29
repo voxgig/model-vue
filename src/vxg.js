@@ -40,22 +40,23 @@ class Vxg {
     this.config.allow.match = this.config.allow.match || []
     
     for(let entry of this.config.allow.match) {
-      if(entry.match) {
-        this.match.allow.add(entry.match, {allow:true})
-      }
+      // if(entry.match) {
+        this.match.allow.add(entry, {allow:true})
+      // }
     }
   }
 
 
   allow(match) {
     let mm = Jsonic(match)
-    let ms = Object.keys(mm).map(x=>mm[x])
+
+    // TODO: handle Aontu array workaround
+    let ms = Array.isArray(match) ? match : Object.keys(mm).map(x=>mm[x])
     let found = null
 
     for(let m of ms) {
       let pat = this.config.allow.modify({...m||{}})
       found = this.match.allow.find(pat)
-      // console.log('VXG allow',JSON.stringify(m),pat,found)
       if(found) { break }
     }
 
@@ -84,8 +85,6 @@ class Vxg {
     Vue.prototype.$vxg = this
 
     window.vxg = this
-
-    // console.log('VXG INSTALL', this)
   }
 }
 

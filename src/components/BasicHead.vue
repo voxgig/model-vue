@@ -99,7 +99,6 @@ export default {
   },
 
   mounted () {
-    // console.log('BasicHead', this)
   },
 
   watch: {

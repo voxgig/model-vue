@@ -38,7 +38,6 @@ export default {
   },
 
   created () {
-    // console.log('BasicAdmin', this.$vuetify)
   },
 
   computed: {
@@ -49,7 +48,6 @@ export default {
 
   methods: {
     action(part, ev) {
-      // console.log('BasicAdmin action', part, ev)
       this.$emit('action', {part,event:ev})
     }
   }

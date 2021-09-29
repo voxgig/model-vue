@@ -81,7 +81,23 @@
           :spec="field.spec"
           :param="{item:item}"
           ></vxg-basic-led>
-          
+
+        <div
+          v-if="'changes'===field.type"
+          class="changes"
+          >
+          <h3>Changes</h3>
+          <table border=0 cellpadding=0 cellspacing=0>
+            <tr><th>Field</th><th>Old</th><th>New</th></tr>
+            <tr v-for="change in changes(item.changes)" :key="change.field">
+              <td>{{ change.field }}</td>
+              <td>{{ change.old }}</td>
+              <td>{{ change.new }}</td>
+            </tr>
+          </table>
+        </div>
+        
+        
       </div>
     </div>
     <v-toolbar flat>
@@ -98,12 +114,31 @@
     padding: 8px;
     box-sizing: border-box;
 }
+div.changes {
+    width: 100%;
+    color: rgba(0,0,0,0.26) !important;
+    background-color: rgba(0,0,0,0) !important;
+    table {
+        width: 100%;
+        background-color: #FFF !important;
+        border-bottom: 0px;
+        border-left: 0px;
+        border-right: 1px solid rgba(0,0,0,0.26);
+        border-top: 1px solid rgba(0,0,0,0.26);
+    }
+    th,td {
+        background-color: #FFF !important;
+        border-right: 0px; 
+        border-top: 0px;
+        border-left: 1px solid rgba(0,0,0,0.26);
+        border-bottom: 1px solid rgba(0,0,0,0.26);
+        padding: 4px;
+    }
+}
 
 </style>
 
 <script>
-
-// console.log('BASICLED')
 
 export default {
   props: {
@@ -131,13 +166,11 @@ export default {
   },
 
   created () {
-    // console.log('BasicLed CREATE', 'list_'+this.spec.ent.store_name)
     this.$store.dispatch('list_'+this.spec.ent.store_name)
   },
 
   watch: {
     '$store.state.trigger.led.add' () {
-      // console.log('LED ADD', this.spec)
       this.openItem({
         last: Date.now()
       })
@@ -212,27 +245,29 @@ export default {
         return fds
       }
       catch(e) {
-        console.error(e)
+        // console.error(e)
       }
       return []
     },
 
     showEditToolbar() {
-      let active = this.spec.edit.layout.toolbar.active
-      if(true === active) {
-        return active
-      }
-      else if(active && active.field) {
-        let show = true
-        for( let [name, criteria] of Object.entries(active.field)) {
-          if('not-empty'===criteria) {
-            show = show && (null != this.item[name])
-          }
-          else {
-            show = false
-          }
+      if(this.allow('edit')) {
+        let active = this.spec.edit.layout.toolbar.active
+        if(true === active) {
+          return active
         }
-        return show
+        else if(active && active.field) {
+          let show = true
+          for( let [name, criteria] of Object.entries(active.field)) {
+            if('not-empty'===criteria) {
+              show = show && (null != this.item[name])
+            }
+            else {
+              show = false
+            }
+          }
+          return show
+        }
       }
       return false
     },
@@ -247,7 +282,6 @@ export default {
     selection (field) {
       let kinds = field.kind && Object.entries(field.kind) 
       let selects = kinds ? kinds.map(([n,d])=>({text:d.title,value:n})) : []
-      // console.log('selects', field, selects)
       return selects
     },
 
@@ -256,8 +290,6 @@ export default {
     },
 
     openItem (selitem) {
-      // console.log('OPEN', selitem)
-      
       if(false === this.spec.edit.active) { // || !this.allow('edit')) {
         return
       }
@@ -268,6 +300,7 @@ export default {
 
       // TODO: from spec!
       this.readitem.last = this.formatdate(this.item.last)
+      this.readitem.when = this.formatdate(this.item.when)
       
       this.show.table = false
       this.show.item = true
@@ -296,18 +329,25 @@ export default {
 
 
     customFilter (value,search,item) {
-      // console.log('BasicLed customFilter', value, search, item)
       return true
     },
 
     allow(action) {
       let out = true
-      let match = this.spec[action].allow
+      let match = this.spec[action] && this.spec[action].allow
       if(match) {
-        out = this.$vxg.allow({0:match})
-        // console.log('VXG BasicLed allow', out, match)
+        out = this.$vxg.allow(match)
       }
       return out
+    },
+
+
+    changes(cmjson) {
+      let cm = null == cmjson ? {} : JSON.parse(cmjson)
+      return Object.keys(cm)
+        .filter(k=>'audit'!=k)
+        .reduce((a,c)=>
+                (a.push({field:c,old:cm[c][0],new:cm[c][1]}),a),[])
     }
   }
 }
