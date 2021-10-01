@@ -13,6 +13,7 @@
     @click:row="openItem"
     :sort-by.sync="sortBy"
     :sort-desc.sync="sortDesc"
+    :search="search"
     >
 
     <template
@@ -140,6 +141,8 @@ div.changes {
 
 <script>
 
+console.log('BasicLed 001')
+
 export default {
   props: {
     spec: {
@@ -160,8 +163,9 @@ export default {
         table: true,
         item: false,
       },
-      sortBy:'when',
-      sortDesc:true,
+      sortBy: 'when',
+      sortDesc: true,
+      search: '',
     }
   },
 
@@ -174,6 +178,9 @@ export default {
       this.openItem({
         last: Date.now()
       })
+    },
+    '$store.state.trigger.search.term' (term) {
+      this.search = term
     },
     '$route': {
       immediate: true,
