@@ -11,12 +11,14 @@ import VxgBasicMain from './components/BasicMain.vue'
 import VxgBasicSide from './components/BasicSide.vue'
 import VxgBasicLed from './components/BasicLed.vue'
 
+import VxgBasicFieldPick from './components/BasicFieldPick.vue'
+
+
 const config_defaults = {
 }
 
 
 const util = {
-
 }
 
 
@@ -40,9 +42,7 @@ class Vxg {
     this.config.allow.match = this.config.allow.match || []
     
     for(let entry of this.config.allow.match) {
-      // if(entry.match) {
-        this.match.allow.add(entry, {allow:true})
-      // }
+      this.match.allow.add(entry, {allow:true})
     }
   }
 
@@ -75,7 +75,10 @@ class Vxg {
       VxgBasicSide,
 
       VxgBasicLed,
+
+      VxgBasicFieldPick,
     }
+
     
     Object.keys(co).forEach(name => {
       Vue.component(name, co[name])

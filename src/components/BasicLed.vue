@@ -51,15 +51,17 @@
         class="vxg-form-field"
         :style="fieldstyle(field,fI)"
         >
-        
+
         <v-text-field
           v-if="'string'===field.type"
           :label="field.title"
           v-model="item[field.name]"
           outlined
           :disabled="field.readonly || !allow('edit')"
+          :rules="field.rules"
           ></v-text-field>
-        
+
+        <!--
         <v-select
           v-if="'status'===field.type"
           :items="selection(field)"
@@ -68,7 +70,15 @@
           outlined
           :disabled="field.readonly || !allow('edit')"
           ></v-select>
+        -->
 
+        <vxg-basic-field-pick
+          v-if="'status'===field.type"
+          :field="field"
+          :param="{item:item}"
+          ></vxg-basic-field-pick>
+
+        
         <v-text-field
           v-if="'datetime'===field.type"
           :label="field.title"
@@ -141,7 +151,7 @@ div.changes {
 
 <script>
 
-console.log('BasicLed 001')
+console.log('BasicLed 002')
 
 export default {
   props: {
@@ -247,6 +257,9 @@ export default {
           //fd.size = this.spec.edit.layout.field[fn].size 
           fd = { ...fd, ...(this.spec.edit.layout.field[fn]||{}) }
 
+          fd.custom = fd.custom || {}
+          fd.custom.allow = fd.custom.allow || this.allow.bind(this)
+          
           fds.push(fd)
         }
         return fds
