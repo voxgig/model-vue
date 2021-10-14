@@ -57,7 +57,9 @@ class Vxg {
     for(let m of ms) {
       let pat = this.config.allow.modify({...m||{}})
       found = this.match.allow.find(pat)
-      if(found) { break }
+      if(found) {
+        break
+      }
     }
 
     return found ? !!found.allow : false

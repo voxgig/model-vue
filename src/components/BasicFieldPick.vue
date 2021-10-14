@@ -29,7 +29,6 @@ export default {
   },
 
   created () {
-    console.log('FIELD', this.field)
     let custom = this.custom = this.field.custom || {}
     custom.allow = custom.allow || (()=>true)
   },

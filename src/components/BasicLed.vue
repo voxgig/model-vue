@@ -151,8 +151,6 @@ div.changes {
 
 <script>
 
-console.log('BasicLed 002')
-
 export default {
   props: {
     spec: {
