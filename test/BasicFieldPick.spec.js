@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import Vue from 'vue'
 
-import def from '../src/components/BasicAdmin.vue'
+import def from '../src/components/BasicFieldPick.vue'
 
 describe(def.name, () => {
   it('happy', async () => {

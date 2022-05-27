@@ -5,8 +5,7 @@ import def from '../src/components/BasicMain.vue'
 
 describe(def.name, () => {
   it('happy', async () => {
-    var props = {
-    }
+    var props = {}
 
     var wrapper = make_component({ Vue, mount, def, props })
 

@@ -1,18 +1,16 @@
 module.exports = {
   runtimeCompiler: true,
 
-
   css: {
     extract: true,
   },
 
-  
   pages: {
     index: 'src/index.js',
   },
   configureWebpack: {
-    externals: /vuetify\/lib/
-/*
+    externals: /vuetify\/lib/,
+    /*
     externals: {
       'vue': {
         commonjs: 'vue',
