@@ -198,7 +198,7 @@ export default {
           {name:'BasicHead', flags:{
             show:{
               add:this.spec.edit.active,
-              search:this.spec.search?.active,
+              search:(this.spec.search && this.spec.search.active),
             },
             allow:{add:this.allow('edit')}}}
         )

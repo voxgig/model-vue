@@ -94,6 +94,13 @@ module.exports =
 
 /***/ }),
 
+/***/ "1b42":
+/***/ (function(module, exports) {
+
+module.exports = require("vuetify/lib/components/VForm");
+
+/***/ }),
+
 /***/ "1faa":
 /***/ (function(module, exports) {
 
@@ -301,6 +308,13 @@ module.exports = require("vuetify/lib/components/VSheet");
 /***/ (function(module, exports) {
 
 module.exports = require("vuetify/lib/components/VDataTable");
+
+/***/ }),
+
+/***/ "b7cf":
+/***/ (function(module, exports) {
+
+module.exports = require("vuetify/lib/components/VCard");
 
 /***/ }),
 
@@ -1745,6 +1759,160 @@ var BasicFieldPick_component = normalizeComponent(
 
 installComponents_default()(BasicFieldPick_component, {VSelect: VSelect_["VSelect"]})
 
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js?{"cacheDirectory":"node_modules/.cache/vue-loader","cacheIdentifier":"09b99265-vue-loader-template"}!./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/BasicAuth.vue?vue&type=template&id=6154b0e6&
+var BasicAuthvue_type_template_id_6154b0e6_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[(_vm.user)?_vm._t("default"):_c('v-container',[_c('v-row',[_c('v-col'),_c('v-col',[_c('v-card',{attrs:{"xstyle":"max-width:40vw"}},[_c('v-card-title',[_vm._v("Sign In")]),_c('v-form',{ref:"form",attrs:{"lazy-validation":""},model:{value:(_vm.valid),callback:function ($$v) {_vm.valid=$$v},expression:"valid"}},[_c('v-card-text',[_c('v-text-field',{attrs:{"rules":_vm.emailRules,"label":"Email","required":"","outlined":""},model:{value:(_vm.email),callback:function ($$v) {_vm.email=$$v},expression:"email"}}),_c('v-text-field',{attrs:{"rules":_vm.passwordRules,"label":"Password","required":"","type":"password","outlined":""},model:{value:(_vm.password),callback:function ($$v) {_vm.password=$$v},expression:"password"}})],1),('empty'!=_vm.state)?_c('v-card-text',[_vm._v(" "+_vm._s(_vm.stateMessage[_vm.state])+" ")]):_vm._e(),_c('v-card-actions',[_c('v-spacer'),_c('v-btn',{attrs:{"disabled":!_vm.valid},on:{"click":_vm.signin}},[_vm._v(" Sign In ")])],1)],1)],1)],1),_c('v-col')],1)],1)],2)}
+var BasicAuthvue_type_template_id_6154b0e6_staticRenderFns = []
+
+
+// CONCATENATED MODULE: ./src/components/BasicAuth.vue?vue&type=template&id=6154b0e6&
+
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/thread-loader/dist/cjs.js!./node_modules/babel-loader/lib!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./src/components/BasicAuth.vue?vue&type=script&lang=js&
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ var BasicAuthvue_type_script_lang_js_ = ({
+  props: {
+    user: Object
+  },
+  data: function data() {
+    return {
+      state: 'empty',
+      valid: false,
+      email: '',
+      password: '',
+      emailRules: [function (v) {
+        return !!v || 'E-mail is required';
+      }, function (v) {
+        return /.+@.+\..+/.test(v) || 'E-mail must be valid';
+      }],
+      passwordRules: [function (v) {
+        return !!v || 'Password is required';
+      }],
+      stateMessage: {
+        signin: 'Signing in...',
+        fail: 'Signin details are incorrect. Please try again.'
+      }
+    };
+  },
+  created: function created() {},
+  computed: {},
+  methods: {
+    signin: function signin() {
+      var _this = this;
+
+      this.state = 'signin';
+      this.$store.dispatch('signin_user', {
+        email: this.email,
+        password: this.password
+      }).then(function (_ref) {
+        var ok = _ref.ok;
+
+        if (!ok) {
+          _this.state = 'fail';
+        }
+      });
+    }
+  }
+});
+// CONCATENATED MODULE: ./src/components/BasicAuth.vue?vue&type=script&lang=js&
+ /* harmony default export */ var components_BasicAuthvue_type_script_lang_js_ = (BasicAuthvue_type_script_lang_js_); 
+// EXTERNAL MODULE: external "vuetify/lib/components/VCard"
+var VCard_ = __webpack_require__("b7cf");
+
+// EXTERNAL MODULE: external "vuetify/lib/components/VForm"
+var VForm_ = __webpack_require__("1b42");
+
+// CONCATENATED MODULE: ./src/components/BasicAuth.vue
+
+
+
+
+
+/* normalize component */
+
+var BasicAuth_component = normalizeComponent(
+  components_BasicAuthvue_type_script_lang_js_,
+  BasicAuthvue_type_template_id_6154b0e6_render,
+  BasicAuthvue_type_template_id_6154b0e6_staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* harmony default export */ var BasicAuth = (BasicAuth_component.exports);
+
+/* vuetify-loader */
+
+
+
+
+
+
+
+
+
+
+
+
+installComponents_default()(BasicAuth_component, {VBtn: VBtn_["VBtn"],VCard: VCard_["VCard"],VCardActions: VCard_["VCardActions"],VCardText: VCard_["VCardText"],VCardTitle: VCard_["VCardTitle"],VCol: VGrid_["VCol"],VContainer: VGrid_["VContainer"],VForm: VForm_["VForm"],VRow: VGrid_["VRow"],VSpacer: VGrid_["VSpacer"],VTextField: VTextField_["VTextField"]})
+
 // CONCATENATED MODULE: ./src/vxg.js
 function vxg_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -1763,6 +1931,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
 
 
 
@@ -1863,7 +2032,8 @@ var vxg_Vxg = /*#__PURE__*/function () {
         VxgBasicMain: BasicMain,
         VxgBasicSide: BasicSide,
         VxgBasicLed: BasicLed,
-        VxgBasicFieldPick: BasicFieldPick
+        VxgBasicFieldPick: BasicFieldPick,
+        VxgBasicAuth: BasicAuth
       };
       Object.keys(co).forEach(function (name) {
         Vue.component(name, co[name]);

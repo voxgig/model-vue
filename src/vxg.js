@@ -11,6 +11,7 @@ import VxgBasicSide from './components/BasicSide.vue'
 import VxgBasicLed from './components/BasicLed.vue'
 
 import VxgBasicFieldPick from './components/BasicFieldPick.vue'
+import VxgBasicAuth from './components/BasicAuth.vue'
 
 const config_defaults = {}
 
@@ -69,6 +70,7 @@ class Vxg {
       VxgBasicLed,
 
       VxgBasicFieldPick,
+      VxgBasicAuth,
     }
 
     Object.keys(co).forEach((name) => {
