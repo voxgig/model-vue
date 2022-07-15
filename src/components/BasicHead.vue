@@ -31,6 +31,24 @@
     vertical style="margin:0px 16px;"></v-divider>
 
 
+  <v-btn
+    v-if="show('remove') && tool.remove.active"
+    tile
+    class="vxg-head-btn"
+    @click="removeItem"
+    >
+    <v-icon left medium>
+      mdi-map-marker-path
+    </v-icon>
+    Remove {{ itemName }}
+  </v-btn>
+  
+  <v-divider
+    v-if="show('remove') && tool.remove.active"
+    vertical style="margin:0px 16px;"></v-divider>
+
+  
+
   <v-text-field
     v-if="tool.search.active && show('search')"
     v-model="search"
@@ -109,7 +127,12 @@ export default {
       handler() {
         this.$forceUpdate()
       }
-    }
+    },
+    '$store.vxg.cmp.BasicHead.allow.remove': {
+      handler() {
+        this.$forceUpdate()
+      }
+    },
   },
   
   computed: {
@@ -134,6 +157,11 @@ export default {
       this.$store.dispatch('trigger_led_add')
     },
 
+    removeItem () {
+      this.$store.dispatch('trigger_led_remove')
+    },
+
+    
     show(action) {
       return this.allow(action) && this.$store.state.vxg.cmp.BasicHead.show[action]
     },
@@ -141,6 +169,9 @@ export default {
     allow(action) {
       if('add' === action) {
         return this.$store.state.vxg.cmp.BasicHead.allow.add
+      }
+      else if('remove' === action) {
+        return this.$store.state.vxg.cmp.BasicHead.allow.remove
       }
       return true
     },
