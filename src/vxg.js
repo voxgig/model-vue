@@ -84,4 +84,9 @@ class Vxg {
   }
 }
 
+Vxg.info = {
+  version: '0.5.1',
+  note: 'rr-local-01',
+}
+
 export default Vxg
