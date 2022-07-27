@@ -5,8 +5,6 @@
     :style="drawerStyle"
     >
     <v-sheet style="display: flex; flex-direction: column; height:100%;">
-
-
       <div style="display: flex; justify-content: space-between;">
         <div style="" v-html="logo"></div>
 
@@ -18,8 +16,21 @@
           >mdi-chevron-left</v-icon>
       </div>
 
+
+      <v-btn-toggle
+        v-model="menuViewIndex"
+        mandatory
+        >
+        <v-btn v-for="menuView in menuViewList" :key="menuView.name">
+          {{ menuView.btnTitle }}
+        </v-btn>
+      </v-btn-toggle>
+
+      <h1 v-if="menuShowTitle">{{ menuView.title }} </h1>
       
-      <template v-for="item in menu">
+      <template
+        v-if="'standard' === menuView.mode"
+        v-for="item in menu">
         <component
           v-if="allow(item)"
           :is="'router-link'"
@@ -30,10 +41,16 @@
           >
           <v-icon>mdi-{{ item.icon }}</v-icon> {{ item.title }}
         </component>
-
       </template>
 
+      <component
+        v-if="'custom' === menuView.mode"
+        :is="menuView.cmp"
+        :spec="menuView.view.spec"
+        >
+      </component>
 
+      
       <div style="flex-grow:100;"></div>
       <v-divider></v-divider>
 
@@ -100,21 +117,62 @@ export default {
   },
   
   data () {
+    // let menuViewList = [
+    //   {
+    //     title: 'One View',
+    //     btnTitle: 'One View',
+    //     mode: 'custom',
+    //   },
+    //   {
+    //     title: 'Management View',
+    //     btnTitle: 'Mgmt View',
+    //     mode: 'standard',
+    //   }
+    // ]
+
     return {
       open: true,
+      menuShowTitle: false,
+      menuViewIndex: null,
+      menuViewList: [],
+      menuView: null,
     }
   },
 
   created () {
+    let menuViewList = []
+    for(let name in this.spec.view) {
+      let menuView = this.spec.view[name]
+      menuView.name = name
+      menuViewList.push(menuView)
+    }
+    this.menuViewList = menuViewList
+    this.menuView = menuViewList[0]
   },
+
+
+  watch: {
+    menuViewIndex(index) {
+      this.menuView = this.menuViewList[index]
+      if('custom' === this.menuView.mode &&
+         this.menuView.name !== this.$route.name ) {
+        this.$router.push({ path: '/'+this.menuView.path })        
+      }
+    }
+  },
+  
   
   computed: {
     menu () {
-      
       let active_item_code = this.$route.meta.view
-      let spec_items = this.spec.menu.items
-      let ordered_codes = this.spec.menu.order.split(/\s*,\s*/)
-      let ux_items =
+
+      let ux_items = []
+
+      if('standard' === this.menuView.mode) {
+        let menu = this.menuView.menu
+        let spec_items = menu.items
+        let ordered_codes = menu.order.split(/\s*,\s*/)
+        ux_items =
           ordered_codes
           .reduce((a,c)=>(a.push(Object.assign({code:c},spec_items[c])),a),[])
           .map(item=>{
@@ -123,7 +181,8 @@ export default {
             })
             return item
           })
-
+      }
+      
       return ux_items
     },
 
