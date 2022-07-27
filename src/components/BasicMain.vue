@@ -9,6 +9,7 @@
       :is="'router-view'"
       :spec="view_spec"
       />
+
   </v-container>
 </v-main>
 </template>
