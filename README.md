@@ -5,6 +5,7 @@ Voxgig Model Vue Components
 ## Dependencies
 
 * vue-router
+* vuetify
 
 
 
