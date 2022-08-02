@@ -17,11 +17,11 @@
       </div>
 
 
-      <v-btn-toggle
+      <v-btn-toggle style="background-color: rgb(var(--vxg-cb1)) !important;"
         v-model="menuViewIndex"
         mandatory
         >
-        <v-btn v-for="menuView in menuViewList" :key="menuView.name">
+        <v-btn v-for="menuView in menuViewList" class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style" color= "white" :key="menuView.name" outlined>
           {{ menuView.btnTitle }}
         </v-btn>
       </v-btn-toggle>
@@ -75,6 +75,10 @@ nav.vxg-side {
         border-color: rgb(var(--vxg-ct2)) !important;
         margin: 16px 8px;
     }
+}
+.btn-style{
+	background-color: rgb(0, 0, 26) !important;
+	width: 130px;
 }
 a.vxg-router-link {
     display: block;
