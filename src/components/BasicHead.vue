@@ -13,7 +13,25 @@
     v-if="!drawerOpen && tool.expandSide.active"
     vertical style="margin:0px 16px;"></v-divider>
 
+
+  <v-select
+    v-if="show('select') && tool.select.active"
+    style="max-width:20%;display:inline-block;margin-left:10px;"
+    :items="selectItems()"
+    :label="tool.select.title"
+    v-model="select"
+    tile
+    outlined
+    hide-details
+    dense
+    ></v-select>
+
   
+  <v-divider
+    v-if="show('select') && tool.select.active"
+    vertical style="margin:0px 16px;"></v-divider>
+
+
   <v-btn
     v-if="show('add') && tool.add.active"
     tile
@@ -112,7 +130,11 @@ export default {
 
   data () {
     return {
-      search: ''
+      search: '',
+      select: '1',  // TODO: get default from model
+      view: {
+        tool: {}
+      }
     }
   },
 
@@ -122,6 +144,10 @@ export default {
   watch: {
     search () {
       this.$store.dispatch('trigger_search', {term:this.search})
+    },
+    select () {
+      console.log('SELECT', this.select)
+      this.$store.dispatch('trigger_select', {value:this.select})
     },
     '$store.vxg.cmp.BasicHead.allow.add': {
       handler() {
@@ -133,6 +159,16 @@ export default {
         this.$forceUpdate()
       }
     },
+    route$: {
+      immediate: true,
+      handler (val) {
+        let name = this.$route.name
+        let view = this.$model.main.app.web.view[name]
+        if(view && view.head) {
+          this.view.tool = view.head.tool
+        }
+      }
+    }
   },
   
   computed: {
@@ -147,7 +183,9 @@ export default {
     },
     tool() {
       // TODO: better if main.app.web.parts.head was provided directly
-      let tool = this.$model.main.app.web.parts.head.tool
+      let headtool = this.$model.main.app.web.parts.head.tool
+      let viewtool = this.view.tool
+      let tool = this.$main.seneca.util.deep(headtool, viewtool)
       return tool
     }
   },
@@ -161,19 +199,26 @@ export default {
       this.$store.dispatch('trigger_led_remove')
     },
 
+    selectItems () {
+      let items = []
+      if(this.tool.select.items) {
+        Object.entries(this.tool.select.items).reduce((items, entry)=>{
+          items.push({value:entry[0], text:entry[1].title})
+          return items
+        }, items)
+      }
+      console.log('selectItems', items)
+      return items
+    },
     
     show(action) {
-      return this.allow(action) && this.$store.state.vxg.cmp.BasicHead.show[action]
+      return this.allow(action) &&
+        this.$store.state.vxg.cmp.BasicHead.show[action] 
     },
     
     allow(action) {
-      if('add' === action) {
-        return this.$store.state.vxg.cmp.BasicHead.allow.add
-      }
-      else if('remove' === action) {
-        return this.$store.state.vxg.cmp.BasicHead.allow.remove
-      }
-      return true
+      let allowed = this.$store.state.vxg.cmp.BasicHead.allow[action]
+      return null == allowed ? true : allowed
     },
     openDrawer() {
       this.$store.dispatch('set_cmp_flags',{name:'BasicSide', flags:{show:true}})

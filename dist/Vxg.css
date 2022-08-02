@@ -24,6 +24,10 @@ nav.vxg-side .v-divider {
   border-color: rgb(var(--vxg-ct2)) !important;
   margin: 16px 8px;
 }
+.btn-style {
+  background-color: #00001a !important;
+  width: 130px;
+}
 a.vxg-router-link {
   display: block;
   margin: 0px 8px;
