@@ -26,8 +26,10 @@
         </v-btn>
       </v-btn-toggle>
 
+      <!--
       <h1 v-if="menuShowTitle">{{ menuView.title }} </h1>
-      
+      -->  
+
       <template
         v-if="'standard' === menuView.mode"
         v-for="item in menu">
@@ -158,9 +160,17 @@ export default {
   watch: {
     menuViewIndex(index) {
       this.menuView = this.menuViewList[index]
-      if('custom' === this.menuView.mode &&
-         this.menuView.name !== this.$route.name ) {
-        this.$router.push({ path: '/'+this.menuView.path })        
+      let pathname = null
+      
+      if('custom' === this.menuView.mode) {
+        pathname = this.menuView.name
+      }
+      else {
+        pathname = this.menuView.menu.default
+      }
+
+      if(pathname && pathname !== this.$route.name ) {
+        this.$router.push(pathname)
       }
     }
   },
