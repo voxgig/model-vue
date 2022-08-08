@@ -131,15 +131,20 @@ export default {
   data () {
     return {
       search: '',
-      select: '1',  // TODO: get default from model
+      select: '',
       view: {
         tool: {}
       }
     }
   },
 
+
   mounted () {
+    if(this.tool.select.active) {
+      this.select = this.tool.select.initial
+    }
   },
+  
 
   watch: {
     search () {
