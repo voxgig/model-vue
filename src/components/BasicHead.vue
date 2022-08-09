@@ -74,7 +74,10 @@
     hide-details
     outlined
     dense
+    clearable
     placeholder="Search"
+    append-icon="mdi-filter"
+    @click:append="filter"
     ></v-text-field>
 
 
@@ -103,8 +106,6 @@
     style="display:inline-block;"
     light
     >mdi-chevron-left</v-icon>
-
-
 
 </v-app-bar>
 </template>
@@ -214,6 +215,10 @@ export default {
       }
       console.log('selectItems', items)
       return items
+    },
+
+    filter() {
+      this.$store.dispatch('trigger_toggle_filter')
     },
     
     show(action) {
