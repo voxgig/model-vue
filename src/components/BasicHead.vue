@@ -8,7 +8,6 @@
     style="display:inline-block;"
     light
     >mdi-chevron-right</v-icon>
-
   <v-divider
     v-if="!drawerOpen && tool.expandSide.active"
     vertical style="margin:0px 16px;"></v-divider>
@@ -65,11 +64,10 @@
     v-if="show('remove') && tool.remove.active"
     vertical style="margin:0px 16px;"></v-divider>
 
-  
-
-  <v-text-field
+  <v-combobox
     v-if="tool.search.active && show('search')"
     v-model="search"
+    :items="getTags()"
     flat
     hide-details
     outlined
@@ -78,8 +76,7 @@
     placeholder="Search"
     append-icon="mdi-filter"
     @click:append="filter"
-    ></v-text-field>
-
+    ></v-combobox> 
 
   <v-spacer
     v-if="tool.avatar.active || tool.expandMain.active"
@@ -197,6 +194,10 @@ export default {
   },
   
   methods: {
+    getTags(){
+	return this.$store.state.main_asset.map(asset=>asset.tag);
+    },
+
     addItem () {
       this.$store.dispatch('trigger_led_add')
     },
@@ -213,7 +214,12 @@ export default {
           return items
         }, items)
       }
-      console.log('selectItems', items)
+      console.log('selectItems', items, this.$route, this.tool)
+      
+       // if(this.$route.path != '/oneview'){
+	// this.tool.select.active = false;
+        // this.tool.add.active = false;
+      // }
       return items
     },
 
