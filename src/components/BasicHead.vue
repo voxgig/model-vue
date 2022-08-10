@@ -14,7 +14,7 @@
 
 
   <v-select
-    v-if="tool.select.active"
+    v-if="show('select') && tool.select.active"
     style="max-width:20%;display:inline-block;margin-left:10px;"
     :items="selectItems()"
     :label="tool.select.title"
