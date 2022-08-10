@@ -214,12 +214,8 @@ export default {
           return items
         }, items)
       }
-      console.log('selectItems', items, this.$route, this.tool)
+      console.log('selectItems', items)
       
-       // if(this.$route.path != '/oneview'){
-	// this.tool.select.active = false;
-        // this.tool.add.active = false;
-      // }
       return items
     },
 
