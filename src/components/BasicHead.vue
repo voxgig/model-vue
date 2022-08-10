@@ -165,26 +165,26 @@ export default {
     '$route.path':{
       handler(val){
 	if(val != '/oneview'){
-          this.tool.select.active = false;
-          this.tool.add.active = true;
-          this.tool.remove.active = true;
+          this.tool.select.active = false
+          this.tool.add.active = true
+          this.tool.remove.active = true
 
 
-	  this.$store.state.vxg.cmp.BasicHead.show.select = false;
-	  this.$store.state.vxg.cmp.BasicHead.show.add = true;
-	  this.$store.state.vxg.cmp.BasicHead.show.remove = true;
+	  this.$store.state.vxg.cmp.BasicHead.show.select = false
+	  this.$store.state.vxg.cmp.BasicHead.show.add = true
+	  this.$store.state.vxg.cmp.BasicHead.show.remove = true
       	}
       	else if(val == '/oneview'){
-	  // console.log("ONEVIEW: ", this.tool.select);
+	  // console.log("ONEVIEW: ", this.tool.select)
           this.tool.select.active = 
 	    this.$store.state.vxg.cmp.BasicHead.show.select = 
-	      this.$store.state.vxg.cmp.BasicHead.show.search = true;
+	      this.$store.state.vxg.cmp.BasicHead.show.search = true
 
-          this.tool.add.active = false;
-          this.tool.remove.active = false;
+          this.tool.add.active = false
+          this.tool.remove.active = false
 
-	  this.$store.state.vxg.cmp.BasicHead.show.add = false;
-	  this.$store.state.vxg.cmp.BasicHead.show.remove = false;
+	  this.$store.state.vxg.cmp.BasicHead.show.add = false
+	  this.$store.state.vxg.cmp.BasicHead.show.remove = false
 
         }
       }
@@ -222,7 +222,7 @@ export default {
   
   methods: {
     getTags(){
-	return this.$store.state.main_asset.map(asset=>asset.tag);
+	return this.$store.state.main_asset.map(asset=>asset.tag)
     },
 
     addItem () {
