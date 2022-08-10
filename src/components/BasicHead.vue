@@ -235,7 +235,6 @@ export default {
 
     selectItems () {
       let items = []
-
       if(this.tool.select.items) {
         Object.entries(this.tool.select.items).reduce((items, entry)=>{
           items.push({value:entry[0], text:entry[1].title})
@@ -243,7 +242,6 @@ export default {
         }, items)
       }
       console.log('selectItems', items)
-
       return items
     },
 
