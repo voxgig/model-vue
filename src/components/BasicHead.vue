@@ -8,14 +8,13 @@
     style="display:inline-block;"
     light
     >mdi-chevron-right</v-icon>
-
   <v-divider
     v-if="!drawerOpen && tool.expandSide.active"
     vertical style="margin:0px 16px;"></v-divider>
 
 
   <v-select
-    v-if="show('select') && tool.select.active"
+    v-if="tool.select.active"
     style="max-width:20%;display:inline-block;margin-left:10px;"
     :items="selectItems()"
     :label="tool.select.title"
@@ -65,11 +64,10 @@
     v-if="show('remove') && tool.remove.active"
     vertical style="margin:0px 16px;"></v-divider>
 
-  
-
-  <v-text-field
+  <v-combobox
     v-if="tool.search.active && show('search')"
     v-model="search"
+    :items="getTags()"
     flat
     hide-details
     outlined
@@ -78,8 +76,7 @@
     placeholder="Search"
     append-icon="mdi-filter"
     @click:append="filter"
-    ></v-text-field>
-
+    ></v-combobox> 
 
   <v-spacer
     v-if="tool.avatar.active || tool.expandMain.active"
@@ -165,6 +162,33 @@ export default {
         this.$forceUpdate()
       }
     },
+    '$route.path':{
+      handler(val){
+	if(val != '/oneview'){
+          this.tool.select.active = false;
+          this.tool.add.active = true;
+          this.tool.remove.active = true;
+
+
+	  this.$store.state.vxg.cmp.BasicHead.show.select = false;
+	  this.$store.state.vxg.cmp.BasicHead.show.add = true;
+	  this.$store.state.vxg.cmp.BasicHead.show.remove = true;
+      	}
+      	else if(val == '/oneview'){
+	  // console.log("ONEVIEW: ", this.tool.select);
+          this.tool.select.active = 
+	    this.$store.state.vxg.cmp.BasicHead.show.select = 
+	      this.$store.state.vxg.cmp.BasicHead.show.search = true;
+
+          this.tool.add.active = false;
+          this.tool.remove.active = false;
+
+	  this.$store.state.vxg.cmp.BasicHead.show.add = false;
+	  this.$store.state.vxg.cmp.BasicHead.show.remove = false;
+
+        }
+      }
+    },
     route$: {
       immediate: true,
       handler (val) {
@@ -197,6 +221,10 @@ export default {
   },
   
   methods: {
+    getTags(){
+	return this.$store.state.main_asset.map(asset=>asset.tag);
+    },
+
     addItem () {
       this.$store.dispatch('trigger_led_add')
     },
@@ -207,6 +235,7 @@ export default {
 
     selectItems () {
       let items = []
+
       if(this.tool.select.items) {
         Object.entries(this.tool.select.items).reduce((items, entry)=>{
           items.push({value:entry[0], text:entry[1].title})
@@ -214,6 +243,7 @@ export default {
         }, items)
       }
       console.log('selectItems', items)
+
       return items
     },
 
