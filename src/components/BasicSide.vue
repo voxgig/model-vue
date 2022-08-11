@@ -175,6 +175,7 @@ export default {
   watch: {
     menuViewIndex(index) {
       this.menuView = this.menuViewList[index]
+
       let pathname = null
       pathname = this.menuView.name
       if('custom' === this.menuView.mode) {
