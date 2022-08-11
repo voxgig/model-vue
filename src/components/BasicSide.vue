@@ -187,7 +187,7 @@ export default {
       }
 
       if(pathname && pathname !== this.$route.name ) {
-        this.$router.push({path: '/'+pathname})
+        this.$router.push(pathname)
       }
     }
   },
