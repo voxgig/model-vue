@@ -176,9 +176,7 @@ export default {
     menuViewIndex(index) {
       this.menuView = this.menuViewList[index]
       let pathname = null
-    
       pathname = this.menuView.name
-
       if('custom' === this.menuView.mode) {
         pathname = this.menuView.name
       }
