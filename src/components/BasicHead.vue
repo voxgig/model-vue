@@ -162,6 +162,33 @@ export default {
         this.$forceUpdate()
       }
     },
+    '$route.path':{
+      handler(val){
+	if(val != '/oneview'){
+          this.tool.select.active = false
+          this.tool.add.active = true
+          this.tool.remove.active = true
+
+
+	  this.$store.state.vxg.cmp.BasicHead.show.select = false
+	  this.$store.state.vxg.cmp.BasicHead.show.add = true
+	  this.$store.state.vxg.cmp.BasicHead.show.remove = true
+      	}
+      	else if(val == '/oneview'){
+	  // console.log("ONEVIEW: ", this.tool.select)
+          this.tool.select.active = 
+	    this.$store.state.vxg.cmp.BasicHead.show.select = 
+	      this.$store.state.vxg.cmp.BasicHead.show.search = true
+
+          this.tool.add.active = false
+          this.tool.remove.active = false
+
+	  this.$store.state.vxg.cmp.BasicHead.show.add = false
+	  this.$store.state.vxg.cmp.BasicHead.show.remove = false
+
+        }
+      }
+    },
     route$: {
       immediate: true,
       handler (val) {
@@ -215,7 +242,6 @@ export default {
         }, items)
       }
       console.log('selectItems', items)
-      
       return items
     },
 

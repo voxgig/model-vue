@@ -21,7 +21,9 @@
         v-model="menuViewIndex"
         mandatory
         >
-        <v-btn v-for="menuView in menuViewList" class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style" color= "white" :key="menuView.name" outlined>
+        <v-btn v-for="menuView in menuViewList" class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style" color= "white" :key="menuView.name" outlined 
+          :to="'/'+menuView.name"
+>
           {{ menuView.btnTitle }}
         </v-btn>
       </v-btn-toggle>
@@ -29,6 +31,17 @@
       <!--
       <h1 v-if="menuShowTitle">{{ menuView.title }} </h1>
       -->  
+      <template
+	v-if="'custom' === menuView.mode"
+      >
+        <v-select
+          :items="assets"
+          :label="roomName"
+          dense
+          outlined
+	  @click="loadAssets"
+        ></v-select>
+      </template>
 
       <template
         v-if="'standard' === menuView.mode"
@@ -142,6 +155,8 @@ export default {
       menuViewIndex: null,
       menuViewList: [],
       menuView: null,
+      assets: this.$route.meta.assets,
+      roomName: '',
     }
   },
 
@@ -160,8 +175,9 @@ export default {
   watch: {
     menuViewIndex(index) {
       this.menuView = this.menuViewList[index]
+
       let pathname = null
-      
+      pathname = this.menuView.name
       if('custom' === this.menuView.mode) {
         pathname = this.menuView.name
       }
@@ -206,6 +222,12 @@ export default {
   },
 
   methods: {
+    loadAssets(){
+      if(this.$route.meta.assets){
+        this.assets = this.$route.meta.assets.map(asset=>asset.tag)
+        this.roomName = this.$route.meta.assets[0].room
+      }
+    },
     allow(item) {
       let out = (item && item.allow) ? this.$vxg.allow( item.allow ) : true
       return out
