@@ -14,7 +14,7 @@
 
 
   <v-select
-    v-if="tool.select.active"
+    v-if="show('select') && tool.select.active"
     style="max-width:20%;display:inline-block;margin-left:10px;"
     :items="selectItems()"
     :label="tool.select.title"
@@ -165,26 +165,26 @@ export default {
     '$route.path':{
       handler(val){
 	if(val != '/oneview'){
-          this.tool.select.active = false;
-          this.tool.add.active = true;
-          this.tool.remove.active = true;
+          this.tool.select.active = false
+          this.tool.add.active = true
+          this.tool.remove.active = true
 
 
-	  this.$store.state.vxg.cmp.BasicHead.show.select = false;
-	  this.$store.state.vxg.cmp.BasicHead.show.add = true;
-	  this.$store.state.vxg.cmp.BasicHead.show.remove = true;
+	  this.$store.state.vxg.cmp.BasicHead.show.select = false
+	  this.$store.state.vxg.cmp.BasicHead.show.add = true
+	  this.$store.state.vxg.cmp.BasicHead.show.remove = true
       	}
       	else if(val == '/oneview'){
-	  // console.log("ONEVIEW: ", this.tool.select);
+	  // console.log("ONEVIEW: ", this.tool.select)
           this.tool.select.active = 
 	    this.$store.state.vxg.cmp.BasicHead.show.select = 
-	      this.$store.state.vxg.cmp.BasicHead.show.search = true;
+	      this.$store.state.vxg.cmp.BasicHead.show.search = true
 
-          this.tool.add.active = false;
-          this.tool.remove.active = false;
+          this.tool.add.active = false
+          this.tool.remove.active = false
 
-	  this.$store.state.vxg.cmp.BasicHead.show.add = false;
-	  this.$store.state.vxg.cmp.BasicHead.show.remove = false;
+	  this.$store.state.vxg.cmp.BasicHead.show.add = false
+	  this.$store.state.vxg.cmp.BasicHead.show.remove = false
 
         }
       }
@@ -222,7 +222,7 @@ export default {
   
   methods: {
     getTags(){
-	return this.$store.state.main_asset.map(asset=>asset.tag);
+	return this.$store.state.main_asset.map(asset=>asset.tag)
     },
 
     addItem () {
@@ -235,7 +235,6 @@ export default {
 
     selectItems () {
       let items = []
-
       if(this.tool.select.items) {
         Object.entries(this.tool.select.items).reduce((items, entry)=>{
           items.push({value:entry[0], text:entry[1].title})
@@ -243,7 +242,6 @@ export default {
         }, items)
       }
       console.log('selectItems', items)
-
       return items
     },
 
