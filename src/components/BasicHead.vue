@@ -77,6 +77,7 @@
     append-icon="mdi-filter"
     @click:append="filter"
     ></v-combobox> 
+  <img src="/filter.png">
 
   <v-spacer
     v-if="tool.avatar.active || tool.expandMain.active"
@@ -189,10 +190,19 @@ export default {
         }
       }
     },
-    route$: {
+    '$route.name': {
       immediate: true,
       handler (val) {
         let name = this.$route.name
+	if(val) {
+	  name = val
+	}
+	if(name == 'oneview') {
+	  if(!this.select) {
+            this.select = '1'
+	  }
+          this.$store.dispatch('trigger_select', {value:this.select})
+	}
         let view = this.$model.main.app.web.view[name]
         if(view && view.head) {
           this.view.tool = view.head.tool
@@ -221,8 +231,8 @@ export default {
   },
   
   methods: {
-    getTags(){
-	return this.$store.state.main_asset.map(asset=>asset.tag)
+    getTags() {
+      return this.$store.state.main_asset.map(asset=>asset.tag)
     },
 
     addItem () {
