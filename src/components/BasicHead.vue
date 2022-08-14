@@ -76,8 +76,7 @@
     placeholder="Search"
     append-icon="mdi-filter"
     @click:append="filter"
-    ></v-combobox> 
-  <img src="/filter.png">
+    ></v-combobox>
 
   <v-spacer
     v-if="tool.avatar.active || tool.expandMain.active"
