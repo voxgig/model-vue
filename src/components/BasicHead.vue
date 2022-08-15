@@ -1,5 +1,5 @@
 <template>
-<v-app-bar app style="height:64px;background-color:white;">
+<v-app-bar app style="height:64px;background-color:white;margin-left: 25px;">
 
   <v-icon
     v-if="!drawerOpen && tool.expandSide.active"
@@ -222,7 +222,7 @@ export default {
   
   methods: {
     getTags(){
-	return this.$store.state.main_asset.map(asset=>asset.tag)
+    	return this.$store.state.main_asset.map(asset=>asset.tag)
     },
 
     addItem () {
