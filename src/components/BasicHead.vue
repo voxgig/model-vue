@@ -221,8 +221,8 @@ export default {
   },
   
   methods: {
-    getTags() {
-      return this.$store.state.main_asset.map(asset=>asset.tag)
+    getTags(){
+    	return this.$store.state.main_asset.map(asset=>asset.tag)
     },
 
     addItem () {
