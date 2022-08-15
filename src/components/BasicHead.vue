@@ -104,10 +104,21 @@
     light
     >mdi-chevron-left</v-icon>
 
+  <v-divider vertical></v-divider>
+  <v-icon large class="iconStyle">mdi-printer</v-icon>
+  <v-divider vertical></v-divider>
+  <v-icon large class="iconStyle">mdi-bookmark-minus-outline</v-icon>
+  <v-divider vertical></v-divider>
+  <v-icon large class="iconStyle">mdi-folder-open-outline</v-icon>
+  <v-divider vertical></v-divider>
+
 </v-app-bar>
 </template>
 
 <style lang="scss">
+.iconStyle{
+    padding: 20px;
+}
 .vxg-head-btn {
 
     height: 100%;
@@ -123,6 +134,7 @@
 </style>
 
 <script>
+
 export default {
   props: ['logo'],
 
