@@ -1,5 +1,5 @@
 <template>
-<v-app-bar app style="height:64px;background-color:white;">
+<v-app-bar app style="height:64px;background-color:white;margin-left: 25px;">
 
   <v-icon
     v-if="!drawerOpen && tool.expandSide.active"
@@ -77,7 +77,6 @@
     append-icon="mdi-filter"
     @click:append="filter"
     ></v-combobox> 
-  <img src="/filter.png">
 
   <v-spacer
     v-if="tool.avatar.active || tool.expandMain.active"
@@ -190,19 +189,10 @@ export default {
         }
       }
     },
-    '$route.name': {
+    route$: {
       immediate: true,
       handler (val) {
         let name = this.$route.name
-	if(val) {
-	  name = val
-	}
-	if(name == 'oneview') {
-	  if(!this.select) {
-            this.select = '1'
-	  }
-          this.$store.dispatch('trigger_select', {value:this.select})
-	}
         let view = this.$model.main.app.web.view[name]
         if(view && view.head) {
           this.view.tool = view.head.tool
