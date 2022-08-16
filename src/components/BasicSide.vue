@@ -179,7 +179,7 @@ export default {
     },
 
     drawerStyle() {
-      return {width: "300px"}
+      return {width: "350px"}
     }
   },
 
@@ -218,7 +218,7 @@ nav.vxg-side {
 }
 .btn-style{
 	background-color: rgb(0, 0, 26) !important;
-	width: 150px;
+	width: 175px;
 }
 a.vxg-router-link {
     display: block;
