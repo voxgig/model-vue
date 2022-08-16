@@ -1,5 +1,5 @@
 <template>
-<v-app-bar app style="height:64px;background-color:white;margin-left: 25px;">
+<v-app-bar app style="height:64px;background-color:white;margin-left: 85px;">
 
   <v-icon
     v-if="!drawerOpen && tool.expandSide.active"
