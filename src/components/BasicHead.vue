@@ -1,5 +1,5 @@
 <template>
-<v-app-bar app style="height:64px;background-color:white;margin-left: 85px;">
+<v-app-bar app :style="appBarStyle">
 
   <v-icon
     v-if="!drawerOpen && tool.expandSide.active"
@@ -65,7 +65,7 @@
     vertical style="margin:0px 16px;"></v-divider>
 
   <v-combobox
-    v-if="tool.search.active && show('search')"
+    v-if="tool.search.active && show('search') && filterIcon"
     v-model="search"
     :items="getTags()"
     flat
@@ -76,7 +76,22 @@
     placeholder="Search"
     append-icon="mdi-filter"
     @click:append="filter"
-    ></v-combobox> 
+    >
+  </v-combobox> 
+
+  <v-combobox
+    v-if="tool.search.active && show('search') && !filterIcon"
+    v-model="search"
+    :items="getTags()"
+    flat
+    hide-details
+    outlined
+    dense
+    clearable
+    placeholder="Search"
+    >
+  </v-combobox>
+
 
   <v-spacer
     v-if="tool.avatar.active || tool.expandMain.active"
@@ -104,21 +119,41 @@
     light
     >mdi-chevron-left</v-icon>
 
-  <v-divider vertical></v-divider>
-  <v-icon large class="iconStyle">mdi-printer</v-icon>
-  <v-divider vertical></v-divider>
-  <v-icon large class="iconStyle">mdi-bookmark-minus-outline</v-icon>
-  <v-divider vertical></v-divider>
-  <v-icon large class="iconStyle">mdi-folder-open-outline</v-icon>
-  <v-divider vertical></v-divider>
+  <v-divider vertical v-if="show('print')"></v-divider>
+
+  <v-btn v-if="tool.print.active && show('print')" 
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px">
+    <v-icon large class="iconStyle">mdi-printer</v-icon>
+  </v-btn>
+
+  <v-divider vertical v-if="show('print')"></v-divider>
+
+  <v-btn v-if="tool.bookmark.active && show('bookmark') && bookmarkVisible" 
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="showTags()">
+    <v-icon large class="iconStyle">mdi-bookmark-minus-outline</v-icon>
+  </v-btn>
+  <v-btn v-if="tool.bookmark.active && show('bookmark') && !bookmarkVisible" 
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" disabled>
+    <v-icon large class="iconStyle">mdi-bookmark-minus-outline</v-icon>
+  </v-btn>
+
+  <v-divider vertical v-if="show('bookmark')"></v-divider>
+
+  <v-btn v-if="tool.collect.active && show('collect')" 
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px">
+    <v-icon large class="iconStyle">mdi-folder-open-outline</v-icon>
+  </v-btn>
+
+  <v-divider vertical v-if="show('collect')"></v-divider>
 
 </v-app-bar>
 </template>
 
 <style lang="scss">
-.iconStyle{
+.iconStyle {
     padding: 20px;
 }
+
 .vxg-head-btn {
 
     height: 100%;
@@ -144,7 +179,8 @@ export default {
       select: '',
       view: {
         tool: {}
-      }
+      },
+      filterIcon: true,
     }
   },
 
@@ -185,6 +221,14 @@ export default {
 	  this.$store.state.vxg.cmp.BasicHead.show.select = false
 	  this.$store.state.vxg.cmp.BasicHead.show.add = true
 	  this.$store.state.vxg.cmp.BasicHead.show.remove = true
+
+	  this.$store.state.vxg.cmp.BasicHead.show.print = false
+	  this.$store.state.vxg.cmp.BasicHead.show.bookmark = false
+	  this.$store.state.vxg.cmp.BasicHead.show.collect = false
+          if(val == '/asset') {
+            this.$store.state.vxg.cmp.BasicHead.show.remove = false
+          }
+          this.filterIcon = false
       	}
       	else if(val == '/oneview'){
 	  // console.log("ONEVIEW: ", this.tool.select)
@@ -197,6 +241,11 @@ export default {
 
 	  this.$store.state.vxg.cmp.BasicHead.show.add = false
 	  this.$store.state.vxg.cmp.BasicHead.show.remove = false
+
+	  this.$store.state.vxg.cmp.BasicHead.show.print = true
+	  this.$store.state.vxg.cmp.BasicHead.show.bookmark = true
+	  this.$store.state.vxg.cmp.BasicHead.show.collect = true
+          this.filterIcon = true
 
         }
       }
@@ -214,6 +263,19 @@ export default {
   },
   
   computed: {
+    appBarStyle() {
+      let style = {'height':' 64px', 'background-color': 'white', 'margin-left': '255px'}
+      if(this.$store.state.vxg.cmp.BasicSide.show) {
+        style['margin-left'] = '255px'
+      }
+      else {
+        style['margin-left'] = '25px'
+      }
+      return style
+    },
+    bookmarkVisible() {
+      return this.$store.state.trigger.bookmark.visible
+    },
     drawerOpen() {
       return this.$store.state.vxg.cmp.BasicSide.show
     },
@@ -233,6 +295,11 @@ export default {
   },
   
   methods: {
+
+    showTags() {
+      this.$store.dispatch('adjust_trigger_bookmark')
+    },
+
     getTags(){
     	return this.$store.state.main_asset.map(asset=>asset.tag)
     },
