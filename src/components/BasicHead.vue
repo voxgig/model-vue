@@ -65,7 +65,7 @@
     vertical style="margin:0px 16px;"></v-divider>
 
   <v-combobox
-    v-if="tool.search.active && show('search') && filterIcon"
+    v-if="tool.search.active && show('search')"
     v-model="search"
     :items="getTags()"
     flat
@@ -74,21 +74,8 @@
     dense
     clearable
     placeholder="Search"
-    append-icon="mdi-filter"
+    :append-icon="filterIcon?'mdi-filter':undefined"
     @click:append="filter"
-    >
-  </v-combobox> 
-
-  <v-combobox
-    v-if="tool.search.active && show('search') && !filterIcon"
-    v-model="search"
-    :items="getTags()"
-    flat
-    hide-details
-    outlined
-    dense
-    clearable
-    placeholder="Search"
     >
   </v-combobox>
 
