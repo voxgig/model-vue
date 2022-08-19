@@ -1,5 +1,5 @@
 <template>
-<v-app-bar app :style="appBarStyle">
+<v-app-bar app :class="appBarClasses">
 
   <v-icon
     v-if="!drawerOpen && tool.expandSide.active"
@@ -77,7 +77,7 @@
     :append-icon="filterIcon?'mdi-filter':undefined"
     @click:append="filter"
     >
-  </v-combobox>
+  </v-combobox> 
 
 
   <v-spacer
@@ -110,25 +110,25 @@
 
   <v-btn v-if="tool.print.active && show('print')" 
     large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px">
-    <v-icon large class="iconStyle">mdi-printer</v-icon>
+    <v-icon large class="vxg-icon">mdi-printer</v-icon>
   </v-btn>
 
   <v-divider vertical v-if="show('print')"></v-divider>
 
   <v-btn v-if="tool.bookmark.active && show('bookmark') && bookmarkVisible" 
     large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="showTags()">
-    <v-icon large class="iconStyle">mdi-bookmark-minus-outline</v-icon>
+    <v-icon large class="vxg-icon">mdi-bookmark-minus-outline</v-icon>
   </v-btn>
   <v-btn v-if="tool.bookmark.active && show('bookmark') && !bookmarkVisible" 
     large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" disabled>
-    <v-icon large class="iconStyle">mdi-bookmark-minus-outline</v-icon>
+    <v-icon large class="vxg-icon">mdi-bookmark-minus-outline</v-icon>
   </v-btn>
 
   <v-divider vertical v-if="show('bookmark')"></v-divider>
 
   <v-btn v-if="tool.collect.active && show('collect')" 
     large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px">
-    <v-icon large class="iconStyle">mdi-folder-open-outline</v-icon>
+    <v-icon large class="vxg-icon">mdi-folder-open-outline</v-icon>
   </v-btn>
 
   <v-divider vertical v-if="show('collect')"></v-divider>
@@ -137,8 +137,18 @@
 </template>
 
 <style lang="scss">
-.iconStyle {
+.vxg-icon {
     padding: 20px;
+}
+
+.vxg-app-bar {
+    height: 64px;
+    background-color: white;
+    margin-left: 255px;
+}
+
+.vxg-app-bar-changed {
+    margin-left: 25px;
 }
 
 .vxg-head-btn {
@@ -200,38 +210,39 @@ export default {
     '$route.path':{
       handler(val){
 	if(val != '/oneview'){
-          this.tool.select.active = false
-          this.tool.add.active = true
-          this.tool.remove.active = true
+          let toShow = this.$store.state.vxg.cmp.BasicHead.show
+          
+          for(let key in toShow) {
+            if(key == 'add' || key == 'remove' || key == 'search') {
+              toShow[key] = true
+              this.tool[key].active = true
+            }
+            else {
+              toShow[key] = false
+              this.tool[key].active = false
+            }
+          }
 
-
-	  this.$store.state.vxg.cmp.BasicHead.show.select = false
-	  this.$store.state.vxg.cmp.BasicHead.show.add = true
-	  this.$store.state.vxg.cmp.BasicHead.show.remove = true
-
-	  this.$store.state.vxg.cmp.BasicHead.show.print = false
-	  this.$store.state.vxg.cmp.BasicHead.show.bookmark = false
-	  this.$store.state.vxg.cmp.BasicHead.show.collect = false
           if(val == '/asset') {
-            this.$store.state.vxg.cmp.BasicHead.show.remove = false
+            toShow.remove = false
           }
           this.filterIcon = false
       	}
       	else if(val == '/oneview'){
 	  // console.log("ONEVIEW: ", this.tool.select)
-          this.tool.select.active = 
-	    this.$store.state.vxg.cmp.BasicHead.show.select = 
-	      this.$store.state.vxg.cmp.BasicHead.show.search = true
+          let toShow = this.$store.state.vxg.cmp.BasicHead.show
 
-          this.tool.add.active = false
-          this.tool.remove.active = false
+          for(let key in toShow) {
+            if(key == 'add' || key == 'remove') {
+              toShow[key] = false
+              this.tool[key].active = false
+            }
+            else {
+              toShow[key] = true
+              this.tool[key].active = true
+            }
+          }
 
-	  this.$store.state.vxg.cmp.BasicHead.show.add = false
-	  this.$store.state.vxg.cmp.BasicHead.show.remove = false
-
-	  this.$store.state.vxg.cmp.BasicHead.show.print = true
-	  this.$store.state.vxg.cmp.BasicHead.show.bookmark = true
-	  this.$store.state.vxg.cmp.BasicHead.show.collect = true
           this.filterIcon = true
 
         }
@@ -250,15 +261,13 @@ export default {
   },
   
   computed: {
-    appBarStyle() {
-      let style = {'height':' 64px', 'background-color': 'white', 'margin-left': '255px'}
+    appBarClasses() {
       if(this.$store.state.vxg.cmp.BasicSide.show) {
-        style['margin-left'] = '255px'
+        return 'vxg-app-bar'
       }
       else {
-        style['margin-left'] = '25px'
+        return 'vxg-app-bar vxg-app-bar-changed'
       }
-      return style
     },
     bookmarkVisible() {
       return this.$store.state.trigger.bookmark.visible
@@ -287,8 +296,10 @@ export default {
       this.$store.dispatch('adjust_trigger_bookmark')
     },
 
-    getTags(){
-    	return this.$store.state.main_asset.map(asset=>asset.tag)
+    getTags() {
+      let tool = {}
+      this.$store.dispatch('vxg_get_assets', tool)
+      return tool.assets.map(v=>v.tag)
     },
 
     addItem () {
