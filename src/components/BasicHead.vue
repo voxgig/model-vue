@@ -109,7 +109,7 @@
   <v-divider vertical v-if="show('print')"></v-divider>
 
   <v-btn v-if="tool.print.active && show('print')" 
-    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px">
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="printMap()">
     <v-icon large class="vxg-icon">mdi-printer</v-icon>
   </v-btn>
 
@@ -250,7 +250,10 @@ export default {
   },
   
   methods: {
-
+    printMap () {
+      this.$store.dispatch('vxg_trigger_printMap')
+    },
+    
     showTags() {
       this.$store.dispatch('adjust_trigger_bookmark')
     },
