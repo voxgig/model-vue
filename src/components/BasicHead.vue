@@ -197,13 +197,6 @@ export default {
       console.log('SELECT', this.select)
       this.$store.dispatch('trigger_select', {value:this.select})
     },
-    tool: {
-      deep: true,
-      immediate: true,
-      handler(val) {
-        this.$store.state.tool = val
-      }
-    },
     '$store.vxg.cmp.BasicHead.allow.add': {
       handler() {
         this.$forceUpdate()
