@@ -197,6 +197,13 @@ export default {
       console.log('SELECT', this.select)
       this.$store.dispatch('trigger_select', {value:this.select})
     },
+    tool: {
+      deep: true,
+      immediate: true,
+      handler(val) {
+        this.$store.state.tool = val
+      }
+    },
     '$store.vxg.cmp.BasicHead.allow.add': {
       handler() {
         this.$forceUpdate()
@@ -205,47 +212,6 @@ export default {
     '$store.vxg.cmp.BasicHead.allow.remove': {
       handler() {
         this.$forceUpdate()
-      }
-    },
-    '$route.path':{
-      handler(val){
-	if(val != '/oneview'){
-          let toShow = this.$store.state.vxg.cmp.BasicHead.show
-          
-          for(let key in toShow) {
-            if(key == 'add' || key == 'remove' || key == 'search') {
-              toShow[key] = true
-              this.tool[key].active = true
-            }
-            else {
-              toShow[key] = false
-              this.tool[key].active = false
-            }
-          }
-
-          if(val == '/asset') {
-            toShow.remove = false
-          }
-          this.filterIcon = false
-      	}
-      	else if(val == '/oneview'){
-	  // console.log("ONEVIEW: ", this.tool.select)
-          let toShow = this.$store.state.vxg.cmp.BasicHead.show
-
-          for(let key in toShow) {
-            if(key == 'add' || key == 'remove') {
-              toShow[key] = false
-              this.tool[key].active = false
-            }
-            else {
-              toShow[key] = true
-              this.tool[key].active = true
-            }
-          }
-
-          this.filterIcon = true
-
-        }
       }
     },
     route$: {
