@@ -184,6 +184,7 @@ export default {
   },
   
   mounted () {
+    this.$route.meta.refs = this.$refs
     if(this.tool.select.active) {
       this.select = this.tool.select.initial
     }
