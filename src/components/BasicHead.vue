@@ -1,5 +1,5 @@
 <template>
-<v-app-bar app style="height:64px;background-color:white;margin-left: 85px;">
+<v-app-bar app :class="appBarClasses">
 
   <v-icon
     v-if="!drawerOpen && tool.expandSide.active"
@@ -74,9 +74,11 @@
     dense
     clearable
     placeholder="Search"
-    append-icon="mdi-filter"
+    :append-icon="filterIcon?'mdi-filter':undefined"
     @click:append="filter"
-    ></v-combobox> 
+    >
+  </v-combobox> 
+
 
   <v-spacer
     v-if="tool.avatar.active || tool.expandMain.active"
@@ -104,21 +106,43 @@
     light
     >mdi-chevron-left</v-icon>
 
-  <v-divider vertical></v-divider>
-  <v-icon large class="iconStyle">mdi-printer</v-icon>
-  <v-divider vertical></v-divider>
-  <v-icon large class="iconStyle">mdi-bookmark-minus-outline</v-icon>
-  <v-divider vertical></v-divider>
-  <v-icon large class="iconStyle">mdi-folder-open-outline</v-icon>
-  <v-divider vertical></v-divider>
+  <v-divider vertical v-if="show('print')"></v-divider>
+  <li v-for="feature of featuresMenu" style="list-style-type: none;" :key="feature.title">
+    <v-btn v-if="feature.title != 'bookmark' && tool[feature.title].active && show(feature.title)"
+      large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="feature.click()">
+      <v-icon large class="vxg-icon">{{feature.icon}}</v-icon>
+    </v-btn>
+
+    <v-btn v-if="feature.title == 'bookmark' && tool.bookmark.active && show('bookmark') && bookmarkVisible" 
+      large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="feature.click()">
+      <v-icon large class="vxg-icon">{{feature.icon}}</v-icon>
+    </v-btn>
+    <v-btn v-if="feature.title == 'bookmark' && tool.bookmark.active && show('bookmark') && !bookmarkVisible" 
+      large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" disabled>
+      <v-icon large class="vxg-icon">{{feature.icon}}</v-icon>
+    </v-btn>
+
+    <v-divider vertical v-if="show(feature.title)"></v-divider>
+  </li>
 
 </v-app-bar>
 </template>
 
 <style lang="scss">
-.iconStyle{
+.vxg-icon {
     padding: 20px;
 }
+
+.vxg-app-bar {
+    height: 64px;
+    background-color: white;
+    margin-left: 255px;
+}
+
+.vxg-app-bar-changed {
+    margin-left: 25px;
+}
+
 .vxg-head-btn {
 
     height: 100%;
@@ -144,12 +168,23 @@ export default {
       select: '',
       view: {
         tool: {}
-      }
+      },
+      filterIcon: true,
     }
   },
 
-
+  created () {
+    let features = ['print', 'bookmark', 'collect']
+    for(let feature of features) {
+      this.featuresMenu.push(Object.assign({}, 
+        this.tool[feature], 
+        {title: feature, click: this[this.tool[feature].click]}))
+    }
+    // console.log('featuresMenu:  ', this.featuresMenu)
+  },
+  
   mounted () {
+    this.$store.state.$refs = this.$refs
     if(this.tool.select.active) {
       this.select = this.tool.select.initial
     }
@@ -174,33 +209,6 @@ export default {
         this.$forceUpdate()
       }
     },
-    '$route.path':{
-      handler(val){
-	if(val != '/oneview'){
-          this.tool.select.active = false
-          this.tool.add.active = true
-          this.tool.remove.active = true
-
-
-	  this.$store.state.vxg.cmp.BasicHead.show.select = false
-	  this.$store.state.vxg.cmp.BasicHead.show.add = true
-	  this.$store.state.vxg.cmp.BasicHead.show.remove = true
-      	}
-      	else if(val == '/oneview'){
-	  // console.log("ONEVIEW: ", this.tool.select)
-          this.tool.select.active = 
-	    this.$store.state.vxg.cmp.BasicHead.show.select = 
-	      this.$store.state.vxg.cmp.BasicHead.show.search = true
-
-          this.tool.add.active = false
-          this.tool.remove.active = false
-
-	  this.$store.state.vxg.cmp.BasicHead.show.add = false
-	  this.$store.state.vxg.cmp.BasicHead.show.remove = false
-
-        }
-      }
-    },
     route$: {
       immediate: true,
       handler (val) {
@@ -214,6 +222,17 @@ export default {
   },
   
   computed: {
+    appBarClasses() {
+      if(this.$store.state.vxg.cmp.BasicSide.show) {
+        return 'vxg-app-bar'
+      }
+      else {
+        return 'vxg-app-bar vxg-app-bar-changed'
+      }
+    },
+    bookmarkVisible() {
+      return this.$store.state.trigger.bookmark.visible
+    },
     drawerOpen() {
       return this.$store.state.vxg.cmp.BasicSide.show
     },
@@ -233,8 +252,18 @@ export default {
   },
   
   methods: {
-    getTags(){
-    	return this.$store.state.main_asset.map(asset=>asset.tag)
+    printMap () {
+      this.$store.dispatch('vxg_trigger_printMap')
+    },
+    
+    showTags() {
+      this.$store.dispatch('adjust_trigger_bookmark')
+    },
+
+    getTags() {
+      let tool = {}
+      this.$store.dispatch('vxg_get_assets', tool)
+      return tool.assets.map(v=>v.tag)
     },
 
     addItem () {
