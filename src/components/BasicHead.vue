@@ -126,7 +126,6 @@
     <v-divider vertical v-if="show(feature.title)"></v-divider>
   </li>
 
-
 </v-app-bar>
 </template>
 
@@ -140,6 +139,7 @@
     background-color: white;
     margin-left: 255px;
 }
+
 
 .vxg-app-bar-updated {
     margin-left: 25px;
@@ -184,6 +184,7 @@ export default {
     }
     // console.log('featuresMenu:  ', this.featuresMenu)
   },
+  
   mounted () {
     this.$store.state.$refs = this.$refs
     if(this.tool.select.active) {
@@ -259,14 +260,16 @@ export default {
     printMap () {
       this.$store.dispatch('vxg_trigger_printMap')
     },
+    
     collect () {
       // to do something
     },
+    
     showTags() {
       this.$store.dispatch('adjust_trigger_bookmark')
     },
-
-    getTags(){
+    
+    getTags() {
       let tool = {}
       this.$store.dispatch('vxg_get_assets', tool)
       return tool.assets.map(v=>v.tag)
