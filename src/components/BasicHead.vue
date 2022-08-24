@@ -161,11 +161,14 @@
 
 <script>
 
+console.log('BASICHEAD AA')
+
+
 export default {
   props: ['logo'],
 
   data () {
-    return {
+    let d = {
       search: '',
       select: '',
       view: {
@@ -173,6 +176,8 @@ export default {
       },
       featuresMenu: [],
     }
+    console.log('DATA', d)
+    return d
   },
 
   created () {
