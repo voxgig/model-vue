@@ -65,6 +65,7 @@
     vertical style="margin:0px 16px;"></v-divider>
 
   <v-combobox
+    ref="search"
     v-if="tool.search.active && show('search')"
     v-model="search"
     :items="getTags()"
@@ -139,7 +140,8 @@
     margin-left: 255px;
 }
 
-.vxg-app-bar-changed {
+
+.vxg-app-bar-updated {
     margin-left: 25px;
 }
 
@@ -169,7 +171,7 @@ export default {
       view: {
         tool: {}
       },
-      filterIcon: true,
+      featuresMenu: [],
     }
   },
 
@@ -192,7 +194,7 @@ export default {
   
 
   watch: {
-    search () {
+    search (val) {
       this.$store.dispatch('trigger_search', {term:this.search})
     },
     select () {
@@ -227,8 +229,11 @@ export default {
         return 'vxg-app-bar'
       }
       else {
-        return 'vxg-app-bar vxg-app-bar-changed'
+        return 'vxg-app-bar vxg-app-bar-updated'
       }
+    },
+    filterIcon (){
+      return this.$store.state.vxg.cmp.BasicHead.show.filterIcon
     },
     bookmarkVisible() {
       return this.$store.state.trigger.bookmark.visible
@@ -256,10 +261,14 @@ export default {
       this.$store.dispatch('vxg_trigger_printMap')
     },
     
+    collect () {
+      // to do something
+    },
+    
     showTags() {
       this.$store.dispatch('adjust_trigger_bookmark')
     },
-
+    
     getTags() {
       let tool = {}
       this.$store.dispatch('vxg_get_assets', tool)
