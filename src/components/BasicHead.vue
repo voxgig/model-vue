@@ -233,7 +233,7 @@ export default {
       }
     },
     filterIcon (){
-      return this.$store.state.vxg.cmp.BasicHead.show.filterIcon
+      return true // this.$store.state.vxg.cmp.BasicHead.show.filterIcon
     },
     bookmarkVisible() {
       return this.$store.state.trigger.bookmark.visible
