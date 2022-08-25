@@ -1,5 +1,5 @@
 <template>
-<v-app-bar app :class="appBarClasses">
+<v-app-bar app class="vxg-app-bar">
 
   <v-icon
     v-if="!drawerOpen && tool.expandSide.active"
@@ -137,11 +137,6 @@
 .vxg-app-bar {
     height: 64px;
     background-color: white;
-    margin-left: 255px;
-}
-
-
-.vxg-app-bar-updated {
     margin-left: 25px;
 }
 
@@ -229,16 +224,8 @@ export default {
   },
   
   computed: {
-    appBarClasses() {
-      if(this.$store.state.vxg.cmp.BasicSide.show) {
-        return 'vxg-app-bar'
-      }
-      else {
-        return 'vxg-app-bar vxg-app-bar-updated'
-      }
-    },
     filterIcon (){
-      return true // this.$store.state.vxg.cmp.BasicHead.show.filterIcon
+      return this.$store.state.vxg.cmp.BasicHead.show.filter
     },
     bookmarkVisible() {
       return this.$store.state.trigger.bookmark.visible
