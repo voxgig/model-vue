@@ -75,7 +75,7 @@
     dense
     clearable
     placeholder="Search"
-    :append-icon="filterIcon?'mdi-filter':undefined"
+    :append-icon="filterIcon?'mdi-tune':undefined"
     @click:append="filter"
     >
   </v-combobox> 
