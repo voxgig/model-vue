@@ -28,6 +28,9 @@
           outlined 
           class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style" color= "white"
           >
+          <v-icon style='color: white;'>
+            {{ menuView.name == 'oneview' ? 'mdi-fit-to-screen-outline' : 'mdi-dots-square'}}
+          </v-icon>
           {{ menuView.btnTitle }}
         </v-btn>
       </v-btn-toggle>
