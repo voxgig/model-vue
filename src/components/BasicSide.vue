@@ -28,6 +28,9 @@
           outlined 
           class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style" color= "white"
           >
+          <v-icon style='color: white;'>
+            {{ menuView.name == 'oneview' ? 'mdi-fit-to-screen-outline' : 'mdi-dots-square'}}
+          </v-icon>
           {{ menuView.btnTitle }}
         </v-btn>
       </v-btn-toggle>
@@ -179,7 +182,7 @@ export default {
     },
 
     drawerStyle() {
-      return {width: "270px"} // 250 px
+      return {width: "282px"} // 250 px
     }
   },
 
@@ -218,7 +221,7 @@ nav.vxg-side {
 }
 .btn-style{
 	background-color: rgb(0, 0, 26) !important;
-	width: 135px;
+	width: 141px;
 }
 a.vxg-router-link {
     display: block;
