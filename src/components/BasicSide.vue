@@ -17,7 +17,7 @@
       </div>
 
 
-      <v-btn-toggle style="background-color: rgb(var(--vxg-cb1)) !important;"
+      <v-btn-toggle style="background-color: rgb(var(--vxg-cb1)) !important;" 
         v-model="menuViewIndex"
         mandatory
         >
@@ -112,8 +112,8 @@ export default {
     return {
       open: true,
       menuShowTitle: false,
-      menuViewIndex: null,
       menuViewList: [],
+      menuViewIndex: null,
       menuView: null,
       roomName: '',
     }
@@ -133,27 +133,49 @@ export default {
       menuViewList.push(menuView)
     }
     this.menuViewList = menuViewList
-    this.menuView = menuViewList[0]
+    console.log("menuViewList", this.menuViewList)
+
+    if(this.$route.name != this.custom.spec.view) {
+      this.menuView = this.menuViewList[1]
+    }
+    else {
+      this.menuView = this.menuViewList[0]
+    }
   },
 
 
   watch: {
     menuViewIndex(index) {
-      this.menuView = this.menuViewList[index]
-
       let pathname = null
       pathname = this.menuView.name
+
       if('custom' === this.menuView.mode) {
         pathname = this.menuView.name
       }
       else {
-        pathname = this.menuView.menu.default
+        if(this.$route.path == this.custom.spec.portal) {
+          pathname = this.menuView.menu.default
+        }
+        else {
+          pathname = this.$route.name
+        }
       }
 
       if(pathname && pathname !== this.$route.name ) {
         this.$router.push(pathname)
       }
-    }
+    },
+    '$route.name': {
+      immediate: true,
+      handler (val) {
+        if(val != this.custom.spec.view) {
+          this.menuView = this.menuViewList[1]
+        }
+        else {
+          this.menuView = this.menuViewList[0]
+        }
+      } 
+    },
   },
   
   
@@ -162,7 +184,6 @@ export default {
       let active_item_code = this.$route.meta.view
 
       let ux_items = []
-
       if('standard' === this.menuView.mode) {
         let menu = this.menuView.menu
         let spec_items = menu.items
@@ -177,13 +198,15 @@ export default {
             return item
           })
       }
-      
       return ux_items
     },
 
     drawerStyle() {
       return {width: "282px"} // 250 px
-    }
+    },
+    custom () {
+      return this.$model.main.ux.custom
+    },
   },
 
   methods: {

@@ -171,20 +171,10 @@ export default {
   },
 
   created () {
-    let features = ['print', 'bookmark', 'collect']
-    for(let feature of features) {
-      this.featuresMenu.push(Object.assign({}, 
-        this.tool[feature], 
-        {title: feature, click: this[this.tool[feature].click]}))
-    }
-    // console.log('featuresMenu:  ', this.featuresMenu)
+    this.$store.state.$refs = this.$refs
   },
   
   mounted () {
-    this.$store.state.$refs = this.$refs
-    if(this.tool.select.active) {
-      this.select = this.tool.select.initial
-    }
   },
   
 
@@ -206,14 +196,21 @@ export default {
         this.$forceUpdate()
       }
     },
-    route$: {
+    '$route.name': {
       immediate: true,
       handler (val) {
         let name = this.$route.name
+        if(val) {
+          name = val
+        }
+
         let view = this.$model.main.app.web.view[name]
         if(view && view.head) {
           this.view.tool = view.head.tool
         }
+
+        this.defaults()
+
       }
     }
   },
@@ -244,6 +241,20 @@ export default {
   },
   
   methods: {
+    defaults () {
+      let features = ['print', 'bookmark', 'collect']
+      this.featuresMenu = []
+      for(let feature of features) {
+        if(this.tool[feature]) {
+          this.featuresMenu.push(Object.assign({}, 
+            this.tool[feature], 
+            {title: feature, click: this[this.tool[feature].click]}))
+        }
+      }
+      if(this.tool.select.active) {
+        this.select = this.tool.select.initial
+      }
+    },
     printMap () {
       this.$store.dispatch('vxg_trigger_printMap')
     },
