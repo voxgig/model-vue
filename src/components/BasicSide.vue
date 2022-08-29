@@ -135,7 +135,7 @@ export default {
     this.menuViewList = menuViewList
     console.log("menuViewList", this.menuViewList)
 
-    if(this.$route.name != this.custom.spec.view) {
+    if(this.$route.name != this.custom.special.view) {
       this.menuView = this.menuViewList[1]
     }
     else {
@@ -153,7 +153,7 @@ export default {
         pathname = this.menuView.name
       }
       else {
-        if(this.$route.path == this.custom.spec.portal) {
+        if(this.$route.path == this.custom.special.portal) {
           pathname = this.menuView.menu.default
         }
         else {
@@ -168,7 +168,7 @@ export default {
     '$route.name': {
       immediate: true,
       handler (val) {
-        if(val != this.custom.spec.view) {
+        if(val != this.custom.special.view) {
           this.menuView = this.menuViewList[1]
         }
         else {
