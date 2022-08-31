@@ -171,7 +171,6 @@ export default {
   },
 
   created () {
-    this.$store.state.$refs = this.$refs
   },
   
   mounted () {
@@ -179,6 +178,11 @@ export default {
   
 
   watch: {
+    '$store.state.trigger.search.term' (term) {
+      if(term == '') {
+        this.$refs.search.reset()
+      }
+    },
     search (val) {
       this.$store.dispatch('trigger_search', {term:this.search})
     },
