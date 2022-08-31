@@ -108,23 +108,31 @@
     >mdi-chevron-left</v-icon>
 
   <v-divider vertical v-if="show('print')"></v-divider>
-  <li v-for="feature of featuresMenu" style="list-style-type: none;" :key="feature.title">
-    <v-btn v-if="feature.title != 'bookmark' && tool[feature.title].active && show(feature.title)"
-      large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="feature.click()">
-      <v-icon large class="vxg-icon">{{feature.icon}}</v-icon>
-    </v-btn>
 
-    <v-btn v-if="feature.title == 'bookmark' && tool.bookmark.active && show('bookmark') && bookmarkVisible" 
-      large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="feature.click()">
-      <v-icon large class="vxg-icon">{{feature.icon}}</v-icon>
-    </v-btn>
-    <v-btn v-if="feature.title == 'bookmark' && tool.bookmark.active && show('bookmark') && !bookmarkVisible" 
-      large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" disabled>
-      <v-icon large class="vxg-icon">{{feature.icon}}</v-icon>
-    </v-btn>
+  <v-btn v-if="tool.print.active && show('print')"
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="print()">
+    <v-icon large class="vxg-icon">mdi-printer</v-icon>
+  </v-btn>
 
-    <v-divider vertical v-if="show(feature.title)"></v-divider>
-  </li>
+  <v-divider vertical v-if="show('print')"></v-divider>
+
+  <v-btn v-if="tool.bookmark.active && show('bookmark') && bookmarkVisible"
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="showTags()">
+    <v-icon large class="vxg-icon">mdi-bookmark-minus-outline</v-icon>
+  </v-btn>
+  <v-btn v-if="tool.bookmark.active && show('bookmark') && !bookmarkVisible"
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" disabled>
+    <v-icon large class="vxg-icon">mdi-bookmark-minus-outline</v-icon>
+  </v-btn>
+
+  <v-divider vertical v-if="show('bookmark')"></v-divider>
+
+  <v-btn v-if="tool['collect'].active && show('collect')"
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="collect()">
+    <v-icon large class="vxg-icon">mdi-folder-open-outline</v-icon>
+  </v-btn>
+
+  <v-divider vertical v-if="show('collect')"></v-divider>
 
 </v-app-bar>
 </template>
@@ -243,20 +251,11 @@ export default {
   
   methods: {
     defaults () {
-      let features = ['print', 'bookmark', 'collect']
-      this.featuresMenu = []
-      for(let feature of features) {
-        if(this.tool[feature]) {
-          this.featuresMenu.push(Object.assign({}, 
-            this.tool[feature], 
-            {title: feature, click: this[this.tool[feature].click]}))
-        }
-      }
       if(this.tool.select.active) {
         this.select = this.tool.select.initial
       }
     },
-    printMap () {
+    print () {
       this.$store.dispatch('vxg_trigger_printMap')
     },
     
