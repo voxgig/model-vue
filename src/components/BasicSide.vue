@@ -135,12 +135,9 @@ export default {
     this.menuViewList = menuViewList
     console.log("menuViewList", this.menuViewList)
 
-    if(this.$route.name != this.custom.special.view) {
-      this.menuView = this.menuViewList[1]
-    }
-    else {
-      this.menuView = this.menuViewList[0]
-    }
+    let route = this.findRouteName(this.$route.name) 
+
+    this.menuView = this.menuViewList[route.index]
   },
 
 
@@ -153,7 +150,7 @@ export default {
         pathname = this.menuView.name
       }
       else {
-        if(this.$route.path == this.custom.special.portal) {
+        if(this.$route.path == this.portal.path) {
           pathname = this.menuView.menu.default
         }
         else {
@@ -168,12 +165,9 @@ export default {
     '$route.name': {
       immediate: true,
       handler (val) {
-        if(val != this.custom.special.view) {
-          this.menuView = this.menuViewList[1]
-        }
-        else {
-          this.menuView = this.menuViewList[0]
-        }
+        let route = this.findRouteName(val)
+
+        this.menuView = this.menuViewList[route.index]
       } 
     },
   },
@@ -207,9 +201,40 @@ export default {
     custom () {
       return this.$model.main.ux.custom
     },
+
+    view () {
+      return this.custom.special.view
+    },
+
+    portal () {
+      return this.custom.special.portal
+    },
   },
 
   methods: {
+    findRouteName(name) {
+      let subroutes
+
+      for(let route in this.custom.special) {
+
+        if(this.custom.special[route].name == name) {
+          return this.custom.special[route]
+        }
+        if(subroutes = this.custom.special[route].sub) {
+          for(let sub of subroutes) {
+	  
+            if(sub == name) {
+              return this.custom.special[route]
+            }
+          
+	  }
+        }
+
+      }
+      
+      return {index: 1} // default index
+    
+    },
     allow(item) {
       let out = (item && item.allow) ? this.$vxg.allow( item.allow ) : true
       return out
