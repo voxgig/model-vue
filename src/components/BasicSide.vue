@@ -17,7 +17,7 @@
       </div>
 
 
-      <v-btn-toggle style="background-color: rgb(var(--vxg-cb1)) !important;" 
+      <v-btn-toggle class="vxg-toggle" 
         v-model="menuViewIndex"
         mandatory
         >
@@ -245,6 +245,9 @@ nav.vxg-side {
 .btn-style{
 	background-color: rgb(0, 0, 26) !important;
 	width: 141px;
+}
+.vxg-toggle{
+    background-color: rgb(var(--vxg-cb1)) !important;
 }
 a.vxg-router-link {
     display: block;
