@@ -204,10 +204,7 @@ export default {
       immediate: true,
       handler (val) {
         let name = this.$route.name
-        if(val) {
-          name = val
-        }
-
+        
         let view = this.$model.main.app.web.view[name]
         if(view && view.head) {
           this.view.tool = view.head.tool
