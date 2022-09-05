@@ -13,6 +13,8 @@ import VxgBasicLed from './components/BasicLed.vue'
 import VxgBasicFieldPick from './components/BasicFieldPick.vue'
 import VxgBasicAuth from './components/BasicAuth.vue'
 
+import Pkg from '../package.json'
+
 const config_defaults = {}
 
 const util = {}
@@ -85,8 +87,8 @@ class Vxg {
 }
 
 Vxg.info = {
-  version: '0.5.1',
-  note: 'rr-local-01',
+  version: Pkg.version,
+  note: 'aaa',
 }
 
 export default Vxg
