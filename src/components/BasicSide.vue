@@ -17,7 +17,7 @@
       </div>
 
 
-      <v-btn-toggle style="background-color: rgb(var(--vxg-cb1)) !important;"
+      <v-btn-toggle class="vxg-toggle" 
         v-model="menuViewIndex"
         mandatory
         >
@@ -112,8 +112,8 @@ export default {
     return {
       open: true,
       menuShowTitle: false,
-      menuViewIndex: null,
       menuViewList: [],
+      menuViewIndex: null,
       menuView: null,
       roomName: '',
     }
@@ -133,27 +133,43 @@ export default {
       menuViewList.push(menuView)
     }
     this.menuViewList = menuViewList
-    this.menuView = menuViewList[0]
+    console.log("menuViewList", this.menuViewList)
+
+    let route = this.findRouteName(this.$route.name) 
+
+    this.menuView = this.menuViewList[route.index]
   },
 
 
   watch: {
     menuViewIndex(index) {
-      this.menuView = this.menuViewList[index]
-
       let pathname = null
       pathname = this.menuView.name
+
       if('custom' === this.menuView.mode) {
         pathname = this.menuView.name
       }
       else {
-        pathname = this.menuView.menu.default
+        if(this.$route.path == this.portal.path) {
+          pathname = this.menuView.menu.default
+        }
+        else {
+          pathname = this.$route.name
+        }
       }
 
       if(pathname && pathname !== this.$route.name ) {
         this.$router.push(pathname)
       }
-    }
+    },
+    '$route.name': {
+      immediate: true,
+      handler (val) {
+        let route = this.findRouteName(val)
+
+        this.menuView = this.menuViewList[route.index]
+      } 
+    },
   },
   
   
@@ -162,7 +178,6 @@ export default {
       let active_item_code = this.$route.meta.view
 
       let ux_items = []
-
       if('standard' === this.menuView.mode) {
         let menu = this.menuView.menu
         let spec_items = menu.items
@@ -177,16 +192,49 @@ export default {
             return item
           })
       }
-      
       return ux_items
     },
 
     drawerStyle() {
       return {width: "282px"} // 250 px
-    }
+    },
+    custom () {
+      return this.$model.main.ux.custom
+    },
+
+    view () {
+      return this.custom.special.view
+    },
+
+    portal () {
+      return this.custom.special.portal
+    },
   },
 
   methods: {
+    findRouteName(name) {
+      let subroutes
+
+      for(let route in this.custom.special) {
+
+        if(this.custom.special[route].name == name) {
+          return this.custom.special[route]
+        }
+        if(subroutes = this.custom.special[route].sub) {
+          for(let sub of subroutes) {
+	  
+            if(sub == name) {
+              return this.custom.special[route]
+            }
+          
+	  }
+        }
+
+      }
+      
+      return {index: 1} // default index
+    
+    },
     allow(item) {
       let out = (item && item.allow) ? this.$vxg.allow( item.allow ) : true
       return out
@@ -222,6 +270,9 @@ nav.vxg-side {
 .btn-style{
 	background-color: rgb(0, 0, 26) !important;
 	width: 141px;
+}
+.vxg-toggle{
+    background-color: rgb(var(--vxg-cb1)) !important;
 }
 a.vxg-router-link {
     display: block;
