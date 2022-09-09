@@ -17,13 +17,15 @@
     v-if="show('select') && tool.select.active"
     style="max-width:20%;display:inline-block;margin-left:10px;"
     :items="selectItems()"
+    ref="select"
     :label="tool.select.title"
     v-model="select"
     tile
     outlined
     hide-details
     dense
-    ></v-select>
+    >
+  </v-select>
 
   
   <v-divider
@@ -116,12 +118,8 @@
 
   <v-divider vertical v-if="show('print')"></v-divider>
 
-  <v-btn v-if="tool.bookmark.active && show('bookmark') && bookmarkVisible"
-    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="showTags()">
-    <v-icon large class="vxg-icon">mdi-bookmark-minus-outline</v-icon>
-  </v-btn>
-  <v-btn v-if="tool.bookmark.active && show('bookmark') && !bookmarkVisible"
-    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" disabled>
+  <v-btn v-if="tool.bookmark.active && show('bookmark')"
+    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="showTags()" :disabled="!bookmarkVisible">
     <v-icon large class="vxg-icon">mdi-bookmark-minus-outline</v-icon>
   </v-btn>
 
@@ -164,14 +162,11 @@
 
 <script>
 
-console.log('BASICHEAD AA')
-
-
 export default {
   props: ['logo'],
 
   data () {
-    let d = {
+    return {
       search: '',
       select: '',
       view: {
@@ -179,8 +174,6 @@ export default {
       },
       featuresMenu: [],
     }
-    console.log('DATA', d)
-    return d
   },
 
   created () {
@@ -200,8 +193,10 @@ export default {
       this.$store.dispatch('trigger_search', {term:this.search})
     },
     select () {
-      console.log('SELECT', this.select)
       this.$store.dispatch('trigger_select', {value:this.select})
+    },
+    '$store.state.trigger.select.value' (val) {
+      this.select = val
     },
     '$store.vxg.cmp.BasicHead.allow.add': {
       handler() {
@@ -265,7 +260,7 @@ export default {
     },
     
     collect () {
-      // to do something
+      this.$store.dispatch('vxg_trigger_collect')
     },
     
     showTags() {
