@@ -16,7 +16,6 @@
           >mdi-chevron-left</v-icon>
       </div>
 
-
       <v-btn-toggle class="vxg-toggle" 
         v-model="menuViewIndex"
         mandatory
@@ -168,6 +167,7 @@ export default {
         let route = this.findRouteName(val)
 
         this.menuView = this.menuViewList[route.index]
+
       } 
     },
   },
@@ -222,18 +222,15 @@ export default {
         }
         if(subroutes = this.custom.special[route].sub) {
           for(let sub of subroutes) {
-	  
             if(sub == name) {
               return this.custom.special[route]
             }
-          
-	  }
+          }
         }
 
       }
-      
+
       return {index: 1} // default index
-    
     },
     allow(item) {
       let out = (item && item.allow) ? this.$vxg.allow( item.allow ) : true
@@ -268,12 +265,14 @@ nav.vxg-side {
     }
 }
 .btn-style{
-	background-color: rgb(0, 0, 26) !important;
-	width: 141px;
+    background-color: rgb(0, 0, 26) !important;
+    width: 141px;
 }
+
 .vxg-toggle{
     background-color: rgb(var(--vxg-cb1)) !important;
 }
+
 a.vxg-router-link {
     display: block;
     margin: 0px 8px;
