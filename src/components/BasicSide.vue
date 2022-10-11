@@ -25,12 +25,15 @@
           :key="menuView.name"
           :to="'/'+menuView.name"
           outlined 
-          class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style" color= "white"
+          class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style text-capitalize" color= "white"
+          style="height: 70px;"
           >
+          <div>
           <v-icon style='color: white;'>
             {{ menuView.name == 'oneview' ? 'mdi-fit-to-screen-outline' : 'mdi-dots-square'}}
           </v-icon>
-          {{ menuView.btnTitle }}
+          <span style="display: block;font-size: 13px; padding: 5px;"> {{ menuView.btnTitle }} </span>
+          </div>
         </v-btn>
       </v-btn-toggle>
 
