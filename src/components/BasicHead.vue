@@ -13,6 +13,21 @@
     vertical style="margin:0px 16px;"></v-divider>
 
 
+  <v-btn
+    v-if="show('clear') && tool.clear.active"
+    outlined
+    style="max-width:16%;display:inline-block;margin-left:2px;"
+    @click="clearFilter"
+  >Clear</v-btn>
+
+  <v-btn
+    v-if="show('go') && tool.go.active"
+    style="max-width:16%;display:inline-block;margin-left:6px;"
+    outlined
+    :disabled="filterDisabled"
+    @click="filterAssets"
+  >Go</v-btn>
+
   <v-select
     v-if="show('select') && tool.select.active"
     style="max-width:20%;display:inline-block;margin-left:10px;"
@@ -29,7 +44,7 @@
 
   
   <v-divider
-    v-if="show('select') && tool.select.active"
+    v-if="(show('select') && tool.select.active) || (show('go') && tool.go.active)"
     vertical style="margin:0px 16px;"></v-divider>
 
 
@@ -111,24 +126,40 @@
 
   <v-divider vertical v-if="show('print')"></v-divider>
 
-  <v-btn v-if="tool.print.active && show('print')"
-    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="print()">
-    <v-icon large class="vxg-icon">mdi-printer</v-icon>
-  </v-btn>
+  <v-tooltip bottom v-if="show('print')">
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn v-if="tool.print.active && show('print')" v-bind="attrs" v-on="on"
+        large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="print()">
+        <v-icon large class="vxg-icon">mdi-printer</v-icon>
+      </v-btn>
+     </template>
+     <span>{{ 'PRINT' }}</span>
+  </v-tooltip>
 
   <v-divider vertical v-if="show('print')"></v-divider>
 
-  <v-btn v-if="tool.bookmark.active && show('bookmark')"
-    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="showTags()" :disabled="!bookmarkVisible">
-    <v-icon large class="vxg-icon">mdi-bookmark-minus-outline</v-icon>
-  </v-btn>
+  <v-tooltip bottom v-if="show('bookmark')">
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn v-if="tool.bookmark.active && show('bookmark')" v-bind="attrs" v-on="on"
+        large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="showTags()" :disabled="!bookmarkVisible">
+        <v-icon large class="vxg-icon">mdi-bookmark-minus-outline</v-icon>
+      </v-btn>
+     </template>
+     <span>{{ (bookmark ? 'HIDE' : 'SHOW') + ' TAGS' }}</span>
+  </v-tooltip>
+
 
   <v-divider vertical v-if="show('bookmark')"></v-divider>
 
-  <v-btn v-if="tool['collect'].active && show('collect')"
-    large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="collect()">
-    <v-icon large class="vxg-icon">mdi-folder-open-outline</v-icon>
-  </v-btn>
+  <v-tooltip bottom v-if="show('collect')">
+    <template v-slot:activator="{ on, attrs }">
+      <v-btn v-if="tool['collect'].active && show('collect')" v-bind="attrs" v-on="on"
+        large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="collect()">
+        <v-icon large class="vxg-icon">mdi-folder-open-outline</v-icon>
+      </v-btn>
+     </template>
+     <span>{{ 'ASSET COLLECTION' }}</span>
+  </v-tooltip>
 
   <v-divider vertical v-if="show('collect')"></v-divider>
 
@@ -225,11 +256,17 @@ export default {
   },
   
   computed: {
+    filterDisabled () {
+      return this.$store.state.trigger.filter_disabled.value
+    },
     filterIcon (){
       return this.$store.state.vxg.cmp.BasicHead.show.filter
     },
     bookmarkVisible() {
       return this.$store.state.trigger.bookmark.visible
+    },
+    bookmark () {
+      return this.$store.state.trigger.bookmark.value
     },
     drawerOpen() {
       return this.$store.state.vxg.cmp.BasicSide.show
@@ -250,6 +287,12 @@ export default {
   },
   
   methods: {
+    filterAssets () {
+      this.$store.dispatch('vxg_trigger_go')
+    },
+    clearFilter () {
+      this.$store.dispatch('vxg_trigger_clear')
+    },
     defaults () {
       if(this.tool.select.active) {
         this.select = this.tool.select.initial
