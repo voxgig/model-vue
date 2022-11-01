@@ -30,7 +30,7 @@
           >
           <div>
           <v-icon style='color: white;'>
-            {{ menuView.name == 'oneview' ? 'mdi-fit-to-screen-outline' : 'mdi-dots-square'}}
+            {{ menuView.name == custom.special.view.name ? 'mdi-fit-to-screen-outline' : 'mdi-dots-square'}}
           </v-icon>
           <span style="display: block;font-size: 13px; padding: 5px;"> {{ menuView.btnTitle }} </span>
           </div>
