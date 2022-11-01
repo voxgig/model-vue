@@ -1,6 +1,6 @@
 {
   "name": "@voxgig/model-vue",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "main": "./dist/Vxg.umd.js",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -34,7 +34,7 @@
     "@hapi/eslint-plugin": "6.0.0",
     "@hapi/joi": "17.1.1",
     "@hapi/lab": "24.3.2",
-    "@jsonic/jsonic-next": "2.3.0",
+    "@jsonic/jsonic-next": "2.4.3",
     "@vue/cli-plugin-babel": "4.5.13",
     "@vue/cli-plugin-eslint": "4.5.13",
     "@vue/cli-plugin-vuex": "4.5.13",
