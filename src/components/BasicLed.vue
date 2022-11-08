@@ -114,6 +114,8 @@
     <v-toolbar flat>
       <v-btn outlined @click="closeItem">Cancel</v-btn>
       <v-spacer />
+      <v-btn outlined @click="removeItem" v-if="allow('edit')">Remove</v-btn>
+      <div style="padding: 5px;"></div>
       <v-btn outlined @click="saveItem" v-if="allow('edit')">Save</v-btn>
     </v-toolbar>
   </div>
@@ -330,6 +332,12 @@ export default {
       this.show.item = false
     },
 
+    removeItem() {
+      this.$store.dispatch('remove_'+this.spec.ent.store_name, this.item)
+      this.show.table = true
+      this.show.item = false
+    },
+
     closeItem () {
       this.show.table = true
       this.show.item = false
@@ -358,7 +366,6 @@ export default {
       }
       return out
     },
-
 
     changes(cmjson) {
       let cm = null == cmjson ? {} : JSON.parse(cmjson)
