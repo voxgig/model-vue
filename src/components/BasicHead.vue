@@ -129,7 +129,9 @@
   <v-tooltip bottom v-if="show('print')">
     <template v-slot:activator="{ on, attrs }">
       <v-btn v-if="tool.print.active && show('print')" v-bind="attrs" v-on="on"
-        large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="print()">
+        large elevation="0" class="pa-1 ma-1" color="white" style="height: 55px" @click="print()"
+	:disabled="tool.print.disabled"
+       >
         <v-icon large class="vxg-icon">mdi-printer</v-icon>
       </v-btn>
      </template>
