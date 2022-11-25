@@ -167,6 +167,10 @@ export default {
     '$route.name': {
       immediate: true,
       handler (val) {
+        if(!val && this.defaultFound()) {
+          this.$router.push(this.menuView.menu.default)
+        }
+        
         let route = this.findRouteName(val)
 
         this.menuView = this.menuViewList[route.index]
@@ -215,6 +219,11 @@ export default {
   },
 
   methods: {
+  
+    defaultFound() {
+      return this.menuView && this.menuView.menu && this.menuView.menu.default
+    },
+    
     findRouteName(name) {
       let subroutes
 
