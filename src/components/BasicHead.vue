@@ -218,7 +218,7 @@ export default {
 
   watch: {
     '$store.state.trigger.search.term' (term) {
-      if(term == '') {
+      if(term == '' && this.$refs.search) {
         this.$refs.search.reset()
       }
     },
