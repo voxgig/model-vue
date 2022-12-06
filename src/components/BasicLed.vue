@@ -417,7 +417,7 @@ export default {
 
       chs = chs.filter(v => {
         let field
-        // if there are no change - don't show the field
+        // if there are no changes - don't show the field
         if(!v.old && !v.new) { 
           return 0
         }
