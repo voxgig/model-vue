@@ -10,11 +10,21 @@
     :footer-props="{
                    itemsPerPageOptions:[25,50,75,100,-1]
                    }"
+    :loading="loading"
     @click:row="openItem"
     :sort-by.sync="sortBy"
     :sort-desc.sync="sortDesc"
     :search="search"
     >
+
+    <template v-slot:loading>
+      <div style="text-align:left;padding: 5vh;" v-if="showprogress">
+        <v-progress-linear indeterminate color="blue darken-2"></v-progress-linear>
+      </div>
+      <div style="text-align:left;padding: 5vh;" v-else>
+        <span> no results </span>
+      </div>
+    </template>
 
     <template
       v-for="header in headers"
@@ -176,7 +186,28 @@ export default {
       sortBy: 'when',
       sortDesc: true,
       search: '',
+      loadlen: 0,
+      showprogress: true,
     }
+  },
+
+  mounted() {
+
+    if(0===this.items.length) {
+      let interval = setInterval(()=>{
+        if(0===this.items.length) {
+          this.loadlen++
+          if(20 < this.loadlen) {
+            this.showprogress = false
+            clearInterval(interval)
+          }
+        }
+        else {
+          clearInterval(interval)
+        }
+      },999)
+    }
+
   },
 
   created () {
@@ -211,6 +242,11 @@ export default {
   },
   
   computed: {
+
+    loading() {
+      return 0 === this.items.length
+    },
+
     headers () {
       let headermap = {}
       Object.entries(this.spec.ent.primary.field)
