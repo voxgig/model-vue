@@ -204,6 +204,7 @@ export default {
     }catch(err) {
       this.showprogress = false
       this.loadingerror = true
+      console.error(err)
     }
   },
 
