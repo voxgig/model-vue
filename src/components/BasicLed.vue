@@ -195,21 +195,6 @@ export default {
 
   mounted() {
 
-    if(0===this.items.length) {
-      let interval = setInterval(()=>{
-        if(0===this.items.length) {
-          this.loadlen++
-          if(20 < this.loadlen) {
-            this.showprogress = false
-            clearInterval(interval)
-          }
-        }
-        else {
-          clearInterval(interval)
-        }
-      },999)
-    }
-
   },
 
   async created () {
