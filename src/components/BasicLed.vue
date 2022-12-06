@@ -21,10 +21,11 @@
       <div style="text-align:left;padding: 5vh;" v-if="showprogress">
         <v-progress-linear indeterminate color="blue darken-2"></v-progress-linear>
       </div>
-      <div style="text-align:left;padding: 5vh;" v-else>
-        <span> no results </span>
-      </div>
     </template>
+    
+    <div style="text-align:left;padding: 5vh;" v-if="loadingerror">
+      <span> error - no results </span>
+    </div>
 
     <template
       v-for="header in headers"
@@ -188,6 +189,7 @@ export default {
       search: '',
       loadlen: 0,
       showprogress: true,
+      loadingerror: false,
     }
   },
 
@@ -210,8 +212,14 @@ export default {
 
   },
 
-  created () {
-    this.$store.dispatch('list_'+this.spec.ent.store_name)
+  async created () {
+    try {
+      await this.$store.dispatch('list_'+this.spec.ent.store_name)
+      this.showprogress = false
+    }catch(err) {
+      this.showprogress = false
+      this.loadingerror = true
+    }
   },
 
   watch: {
@@ -244,7 +252,7 @@ export default {
   computed: {
 
     loading() {
-      return 0 === this.items.length
+      return 0 === this.items.length && this.showprogress
     },
 
     headers () {
