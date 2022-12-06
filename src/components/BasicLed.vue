@@ -327,6 +327,11 @@ export default {
       }
       return false
     },
+
+    customInfoFields() {
+      return this.$model.main.ux.custom.info_fields
+    },
+
   },
 
 
@@ -405,11 +410,37 @@ export default {
 
     changes(cmjson) {
       let cm = null == cmjson ? {} : JSON.parse(cmjson)
-      return Object.keys(cm)
+      let chs = Object.keys(cm)
         .filter(k=>'audit'!=k)
         .reduce((a,c)=>
                 (a.push({field:c,old:cm[c][0],new:cm[c][1]}),a),[])
-    }
+
+      chs = chs.filter(v => {
+        let field
+        // if there are no change - don't show the field
+        if(!v.old && !v.new) { 
+          return 0
+        }
+        if(field = this.getInfoFieldByName(v.field)) {
+          v.field = field.title
+        }
+        return 1
+      })
+
+      console.log(this.customInfoFields, chs)
+
+      return chs
+    },
+
+    getInfoFieldByName(name) {
+      for(let field of this.customInfoFields) {
+        if(field.name == name) {
+          return field
+        }
+      }
+      return null
+    },
+
   }
 }
 </script>
