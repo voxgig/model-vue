@@ -201,12 +201,12 @@ export default {
   async created () {
     try {
       await this.$store.dispatch('list_'+this.spec.ent.store_name)
-      this.mutateLoadState({loading: false,
+      this.setLoadState({loading: false,
 	error: false,
         done: true,
       })
     }catch(err) {
-      this.mutateLoadState({loading: false,
+      this.setLoadState({loading: false,
         error: true,
         done: true,
       })
@@ -441,7 +441,7 @@ export default {
       return null
     },
 
-    mutateLoadState(toMerge) {
+    setLoadState(toMerge) {
       Object.assign(this.loadState, toMerge)
     },
 
