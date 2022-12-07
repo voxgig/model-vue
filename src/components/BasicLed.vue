@@ -18,12 +18,12 @@
     >
 
     <template v-slot:loading>
-      <div style="text-align:left;padding: 5vh;" v-if="showprogress">
+      <div style="text-align:left;padding: 5vh;">
         <v-progress-linear indeterminate color="blue darken-2"></v-progress-linear>
       </div>
     </template>
     
-    <div style="text-align:left;padding: 5vh;" v-if="loadingerror">
+    <div style="text-align:left;padding: 5vh;" v-if="loadState.error">
       <span> error - no results </span>
     </div>
 
@@ -190,6 +190,7 @@ export default {
       loadlen: 0,
       showprogress: true,
       loadingerror: false,
+      loadState: {initial: true, loading: true, error: false, done: false},
     }
   },
 
@@ -200,10 +201,15 @@ export default {
   async created () {
     try {
       await this.$store.dispatch('list_'+this.spec.ent.store_name)
-      this.showprogress = false
+      this.mutateLoadState({loading: false,
+	error: false,
+        done: true,
+      })
     }catch(err) {
-      this.showprogress = false
-      this.loadingerror = true
+      this.mutateLoadState({loading: false,
+        error: true,
+        done: true,
+      })
       console.error(err)
     }
   },
@@ -238,7 +244,7 @@ export default {
   computed: {
 
     loading() {
-      return this.showprogress
+      return this.loadState.loading
     },
 
     headers () {
@@ -433,6 +439,10 @@ export default {
         }
       }
       return null
+    },
+
+    mutateLoadState(toMerge) {
+      Object.assign(this.loadState, toMerge)
     },
 
   }
