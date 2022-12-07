@@ -10,11 +10,22 @@
     :footer-props="{
                    itemsPerPageOptions:[25,50,75,100,-1]
                    }"
+    :loading="loading"
     @click:row="openItem"
     :sort-by.sync="sortBy"
     :sort-desc.sync="sortDesc"
     :search="search"
     >
+
+    <template v-slot:loading>
+      <div style="text-align:left;padding: 5vh;">
+        <v-progress-linear indeterminate color="blue darken-2"></v-progress-linear>
+      </div>
+    </template>
+    
+    <div style="text-align:left;padding: 5vh;" v-if="loadState=='error'">
+      <span> error - no results </span>
+    </div>
 
     <template
       v-for="header in headers"
@@ -100,8 +111,8 @@
           <h3>Changes</h3>
           <table border=0 cellpadding=0 cellspacing=0>
             <tr><th>Field</th><th>Old</th><th>New</th></tr>
-            <tr v-for="change in changes(item.changes)" :key="change.field">
-              <td>{{ change.field }}</td>
+            <tr v-for="change in changes(item.changes)" :key="change.title">
+              <td>{{ change.title }}</td>
               <td>{{ change.old }}</td>
               <td>{{ change.new }}</td>
             </tr>
@@ -176,11 +187,26 @@ export default {
       sortBy: 'when',
       sortDesc: true,
       search: '',
+      loadlen: 0,
+      showprogress: true,
+      loadingerror: false,
+      // 'loading' | 'error' | 'done'
+      loadState: 'loading',
     }
   },
 
-  created () {
-    this.$store.dispatch('list_'+this.spec.ent.store_name)
+  mounted() {
+
+  },
+
+  async created () {
+    try {
+      await this.$store.dispatch('list_'+this.spec.ent.store_name)
+      this.loadState = 'done'
+    }catch(err) {
+      this.loadState = 'error'
+      console.error(err)
+    }
   },
 
   watch: {
@@ -211,6 +237,11 @@ export default {
   },
   
   computed: {
+
+    loading() {
+      return this.loadState == 'loading'
+    },
+
     headers () {
       let headermap = {}
       Object.entries(this.spec.ent.primary.field)
@@ -291,6 +322,11 @@ export default {
       }
       return false
     },
+
+    customInfoFields() {
+      return this.$model.main.ux.custom.info_fields
+    },
+
   },
 
 
@@ -369,11 +405,37 @@ export default {
 
     changes(cmjson) {
       let cm = null == cmjson ? {} : JSON.parse(cmjson)
-      return Object.keys(cm)
+      let chs = Object.keys(cm)
         .filter(k=>'audit'!=k)
         .reduce((a,c)=>
-                (a.push({field:c,old:cm[c][0],new:cm[c][1]}),a),[])
-    }
+                (a.push({title: c, field:c, old:cm[c][0],new:cm[c][1]}),a),[])
+
+      chs = chs.filter(v => {
+        let field
+        // if there are no changes - don't show the field
+        if(!v.old && !v.new) { 
+          return 0
+        }
+        if(field = this.getInfoFieldByName(v.title)) {
+          v.title = field.title
+        }
+        return 1
+      })
+
+      // console.log(this.customInfoFields, chs)
+
+      return chs
+    },
+
+    getInfoFieldByName(name) {
+      for(let field of this.customInfoFields) {
+        if(field.name == name) {
+          return field
+        }
+      }
+      return null
+    },
+
   }
 }
 </script>
