@@ -238,7 +238,7 @@ export default {
   computed: {
 
     loading() {
-      return 0 === this.items.length && this.showprogress
+      return this.showprogress
     },
 
     headers () {
