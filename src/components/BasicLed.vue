@@ -421,7 +421,7 @@ export default {
         return 1
       })
 
-      console.log(this.customInfoFields, chs)
+      // console.log(this.customInfoFields, chs)
 
       return chs
     },
