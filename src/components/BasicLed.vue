@@ -111,8 +111,8 @@
           <h3>Changes</h3>
           <table border=0 cellpadding=0 cellspacing=0>
             <tr><th>Field</th><th>Old</th><th>New</th></tr>
-            <tr v-for="change in changes(item.changes)" :key="change.field">
-              <td>{{ change.field }}</td>
+            <tr v-for="change in changes(item.changes)" :key="change.title">
+              <td>{{ change.title }}</td>
               <td>{{ change.old }}</td>
               <td>{{ change.new }}</td>
             </tr>
@@ -407,7 +407,7 @@ export default {
       let chs = Object.keys(cm)
         .filter(k=>'audit'!=k)
         .reduce((a,c)=>
-                (a.push({field:c,old:cm[c][0],new:cm[c][1]}),a),[])
+                (a.push({title: c, field:c, old:cm[c][0],new:cm[c][1]}),a),[])
 
       chs = chs.filter(v => {
         let field
@@ -415,13 +415,13 @@ export default {
         if(!v.old && !v.new) { 
           return 0
         }
-        if(field = this.getInfoFieldByName(v.field)) {
-          v.field = field.title
+        if(field = this.getInfoFieldByName(v.title)) {
+          v.title = field.title
         }
         return 1
       })
 
-      // console.log(this.customInfoFields, chs)
+      console.log(this.customInfoFields, chs)
 
       return chs
     },
