@@ -23,7 +23,7 @@
       </div>
     </template>
     
-    <div style="text-align:left;padding: 5vh;" v-if="loadState.error">
+    <div style="text-align:left;padding: 5vh;" v-if="loadState=='error'">
       <span> error - no results </span>
     </div>
 
@@ -190,7 +190,8 @@ export default {
       loadlen: 0,
       showprogress: true,
       loadingerror: false,
-      loadState: {initial: true, loading: true, error: false, done: false},
+      // 'loading' | 'error' | 'done'
+      loadState: 'loading',
     }
   },
 
@@ -201,15 +202,9 @@ export default {
   async created () {
     try {
       await this.$store.dispatch('list_'+this.spec.ent.store_name)
-      this.setLoadState({loading: false,
-	error: false,
-        done: true,
-      })
+      this.loadState = 'done'
     }catch(err) {
-      this.setLoadState({loading: false,
-        error: true,
-        done: true,
-      })
+      this.loadState = 'error'
       console.error(err)
     }
   },
@@ -244,7 +239,7 @@ export default {
   computed: {
 
     loading() {
-      return this.loadState.loading
+      return this.loadState == 'loading'
     },
 
     headers () {
@@ -439,10 +434,6 @@ export default {
         }
       }
       return null
-    },
-
-    setLoadState(toMerge) {
-      Object.assign(this.loadState, toMerge)
     },
 
   }
