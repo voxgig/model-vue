@@ -51,7 +51,9 @@
   </v-data-table>
   <div v-if="show.item" >
     <v-toolbar flat v-if="showEditToolbar">
+<!--
       <v-btn outlined @click="customAction('user_reset_password')">Reset Password</v-btn>
+-->
       <v-spacer />
     </v-toolbar>
 
