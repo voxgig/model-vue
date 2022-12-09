@@ -49,7 +49,7 @@
     </template>
     
   </v-data-table>
-  <div v-if="show.item" >
+  <div v-if="show.item">
     <v-toolbar flat v-if="showEditToolbar">
 <!--
       <v-btn outlined @click="customAction('user_reset_password')">Reset Password</v-btn>
@@ -70,7 +70,7 @@
           :label="field.title"
           v-model="item[field.name]"
           outlined
-          :disabled="field.readonly || !allow('edit')"
+          :disabled="field.readonly || !allow('edit', field)"
           :rules="field.rules"
           ></v-text-field>
 
@@ -212,6 +212,7 @@ export default {
   },
 
   watch: {
+
     '$store.state.trigger.led.add' () {
       this.openItem({
         last: Date.now()
@@ -333,6 +334,7 @@ export default {
 
 
   methods: {
+
     itemslot (header) {
       return 'item.'+header.value
     },
@@ -396,12 +398,19 @@ export default {
       return true
     },
 
-    allow(action) {
+    allow(action, field) {
       let out = true
       let match = this.spec[action] && this.spec[action].allow
       if(match) {
         out = this.$vxg.allow(match)
       }
+
+      if(action == 'edit' && field && field.edit === false) {
+        if(this.item.id) {
+          out = false
+        }
+      }
+
       return out
     },
 
@@ -412,17 +421,19 @@ export default {
         .reduce((a,c)=>
                 (a.push({title: c, field:c, old:cm[c][0],new:cm[c][1]}),a),[])
 
-      chs = chs.filter(v => {
-        let field
-        // if there are no changes - don't show the field
-        if(!v.old && !v.new) { 
-          return 0
-        }
-        if(field = this.getInfoFieldByName(v.title)) {
-          v.title = field.title
-        }
-        return 1
-      })
+      if(this.customInfoFields) {
+        chs = chs.filter(v => {
+          let field
+          // if there are no changes - don't show the field
+          if(!v.old && !v.new) { 
+            return 0
+          }
+          if(field = this.getInfoFieldByName(v.title)) {
+            v.title = field.title
+          }
+          return 1
+        })
+      }
 
       // console.log(this.customInfoFields, chs)
 
