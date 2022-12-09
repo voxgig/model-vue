@@ -217,7 +217,6 @@ export default {
 
       if(this.restrictedFields) {
         if(this.item.id) {
-          console.log(this.fields)
           this.fields.forEach(field => {
             if(this.restrictedFields[field.name]) {
               field.readonly = true
@@ -359,10 +358,6 @@ export default {
 
 
   methods: {
-
-    CLICK() {
-      console.log('CLICK!')
-    },
 
     itemslot (header) {
       return 'item.'+header.value
