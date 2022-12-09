@@ -405,6 +405,7 @@ export default {
         out = this.$vxg.allow(match)
       }
 
+      console.log(this.item, action, field)
       if(action == 'edit' && field && field.edit === false) {
         if(this.item.id) {
           out = false
