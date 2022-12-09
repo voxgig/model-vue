@@ -70,7 +70,7 @@
           :label="field.title"
           v-model="item[field.name]"
           outlined
-          :disabled="field.readonly || !allow('edit')"
+          :disabled="field.readonly || !allow('edit', field)"
           :rules="field.rules"
           ></v-text-field>
 
@@ -213,26 +213,6 @@ export default {
 
   watch: {
 
-    'show.item'(val) {
-
-      if(this.restrictedFields) {
-        if(this.item.id) {
-          this.fields.forEach(field => {
-            if(this.restrictedFields[field.name]) {
-              field.readonly = true
-            }
-          })
-        } else {
-          this.fields.forEach(field => {
-            if(this.restrictedFields[field.name]) {
-              field.readonly = false
-	    }
-          })
-        }
-      }
-      // console.log(val)
-    },
-
     '$store.state.trigger.led.add' () {
       this.openItem({
         last: Date.now()
@@ -350,10 +330,6 @@ export default {
       return this.$model.main.ux.custom.info_fields
     },
 
-    restrictedFields() {
-      return this.$model.main.ux.custom.restricted_fields
-    },
-
   },
 
 
@@ -422,12 +398,19 @@ export default {
       return true
     },
 
-    allow(action) {
+    allow(action, field) {
       let out = true
       let match = this.spec[action] && this.spec[action].allow
       if(match) {
         out = this.$vxg.allow(match)
       }
+
+      if(field && field.edit === false) {
+        if(this.item.id) {
+          out = false
+        }
+      }
+
       return out
     },
 
