@@ -123,11 +123,26 @@
         
         
       </div>
+      
+    <v-dialog width="500" v-model="remove.dialog"  @keydown.esc="removeItemCancel">
+      <v-card >
+        <v-toolbar dense flat>
+          <v-toolbar-title > {{ 'Remove ' + this.spec.ent.primary.name||'Item' }} </v-toolbar-title>
+        </v-toolbar>
+        <v-card-text class="pa-4"> Confirm you would like to remove: {{ getName(this.item) }} </v-card-text>
+          <v-card-actions class="pt-0">
+            <v-spacer></v-spacer>
+            <v-btn outlined @click="removeItemCancel">Cancel</v-btn>
+            <v-btn outlined @click="removeItem">Remove</v-btn>
+          </v-card-actions>
+      </v-card>
+    </v-dialog>
+  
     </div>
     <v-toolbar flat>
       <v-btn outlined @click="closeItem">Cancel</v-btn>
       <v-spacer />
-      <v-btn outlined @click="removeItem" v-if="allow('edit')">Remove</v-btn>
+      <v-btn outlined @click="remove.dialog = true" v-if="allow('edit')">Remove</v-btn>
       <div style="padding: 5px;"></div>
       <v-btn outlined @click="saveItem" v-if="allow('edit')">Save</v-btn>
     </v-toolbar>
@@ -194,6 +209,9 @@ export default {
       loadingerror: false,
       // 'loading' | 'error' | 'done'
       loadState: 'loading',
+      remove: {
+        dialog: false,
+      },
     }
   },
 
@@ -376,6 +394,11 @@ export default {
       this.$store.dispatch('remove_'+this.spec.ent.store_name, this.item)
       this.show.table = true
       this.show.item = false
+      this.remove.dialog = false
+    },
+    
+    removeItemCancel() {
+      this.remove.dialog = false
     },
 
     closeItem () {
@@ -448,6 +471,12 @@ export default {
         }
       }
       return null
+    },
+    
+    getName(item) {
+      // use 'ordered' fields and get the first key
+      let key = Object.keys(this.spec.edit.layout.field)[0]
+      return item[key]
     },
 
   }
