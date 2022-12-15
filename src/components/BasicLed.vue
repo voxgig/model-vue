@@ -65,6 +65,9 @@
         :style="fieldstyle(field,fI)"
         >
 
+        <a v-if="field.link" @click="activeLink(field.link)" style="text-decoration: underline;"> {{ field.link.title }} </a>
+        <a v-else> &zwnj; </a>
+       
         <v-text-field
           v-if="'string'===field.type"
           :label="field.title"
@@ -73,6 +76,21 @@
           :disabled="field.readonly || !allow('edit', field)"
           :rules="field.rules"
           ></v-text-field>
+          
+        <v-dialog width="1000" height="1000" v-if="field.link" v-model="link_dialogs[field.link.src]">
+          <v-card >
+          <!--
+            <v-toolbar dense flat>
+            <v-toolbar-title > {{ field.link.title }} </v-toolbar-title>
+            </v-toolbar>
+          -->
+            <v-card-text class="pa-0"></v-card-text>
+            <img :src="field.link.src" style="width:100%"/>
+            <v-card-actions class="pt-0">
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+    
 
         <!--
         <v-select
@@ -152,7 +170,8 @@
 
 <style lang="scss">
 .vxg-form-field {
-    padding: 8px;
+    text-align: right;
+    padding: 0px 8px 0px 0px;
     box-sizing: border-box;
 }
 div.changes {
@@ -212,6 +231,10 @@ export default {
       remove: {
         dialog: false,
       },
+      
+      link_dialogs: {},
+      showLink: false,
+      
     }
   },
 
@@ -220,6 +243,10 @@ export default {
   },
 
   async created () {
+  
+    this.link_dialogs = this.fields
+      .reduce(((acc, field) => (field.link ? acc[field.link.src] = false : null, acc)), {})
+      
     try {
       await this.$store.dispatch('list_'+this.spec.ent.store_name)
       this.loadState = 'done'
@@ -230,7 +257,7 @@ export default {
   },
 
   watch: {
-
+  
     '$store.state.trigger.led.add' () {
       this.openItem({
         last: Date.now()
@@ -477,6 +504,10 @@ export default {
       // use 'ordered' fields and get the first key
       let key = Object.keys(this.spec.edit.layout.field)[0]
       return item[key]
+    },
+    
+    activeLink(link) {
+      this.link_dialogs[link.src] = true
     },
 
   }
