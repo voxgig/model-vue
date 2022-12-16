@@ -65,7 +65,9 @@
         :style="fieldstyle(field,fI)"
         >
 
-        <a v-if="field.link" @click="activeLink(field.link)" style="text-decoration: underline;"> {{ field.link.title }} </a>
+        <a v-if="field.popup" @click="activatePopup(field.popup)" style="text-decoration: underline;"> 
+          {{ field.popup.spec.title }} 
+        </a>
         <a v-else> &zwnj; </a>
        
         <v-text-field
@@ -77,18 +79,18 @@
           :rules="field.rules"
           ></v-text-field>
           
-        <v-dialog width="1000" height="1000" v-if="field.link" v-model="link_dialogs[field.link.src]">
-          <v-card >
-          <!--
-            <v-toolbar dense flat>
-            <v-toolbar-title > {{ field.link.title }} </v-toolbar-title>
-            </v-toolbar>
-          -->
-            <v-card-text class="pa-0"></v-card-text>
-            <img :src="field.link.src" style="width:100%"/>
-            <v-card-actions class="pt-0">
-            </v-card-actions>
-          </v-card>
+        
+        <v-dialog v-if="field.popup"
+          :height="field.popup.height"
+          :width="field.popup.width"
+          v-model="popup_dialogs[field.popup.name]"
+        >
+            <component
+              :v-if="field.popup.active"
+              :is="field.popup.cmp"
+              :spec="field.popup.spec"
+            >
+            </component>
         </v-dialog>
     
 
@@ -232,7 +234,7 @@ export default {
         dialog: false,
       },
       
-      link_dialogs: {},
+      popup_dialogs: {},
       showLink: false,
       
     }
@@ -244,8 +246,8 @@ export default {
 
   async created () {
   
-    this.link_dialogs = this.fields
-      .reduce(((acc, field) => (field.link ? acc[field.link.src] = false : null, acc)), {})
+    this.popup_dialogs = this.fields
+      .reduce(((acc, field) => (field.popup ? acc[field.popup.name] = false : null, acc)), {})
       
     try {
       await this.$store.dispatch('list_'+this.spec.ent.store_name)
@@ -506,8 +508,8 @@ export default {
       return item[key]
     },
     
-    activeLink(link) {
-      this.link_dialogs[link.src] = true
+    activatePopup(popup) {
+      this.popup_dialogs[popup.name] = true
     },
 
   }
