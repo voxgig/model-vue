@@ -235,7 +235,6 @@ export default {
       },
       
       popup_dialogs: {},
-      showLink: false,
       
     }
   },
