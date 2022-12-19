@@ -62,7 +62,8 @@ a.vxg-router-link.router-link-active .v-icon {
   height: 48px;
 }
 .vxg-form-field {
-  padding: 8px;
+  text-align: right;
+  padding: 0px 8px 0px 0px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 }
