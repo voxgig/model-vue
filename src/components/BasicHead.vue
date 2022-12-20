@@ -85,7 +85,8 @@
     ref="search"
     v-if="tool.search.active && show('search')"
     v-model="search"
-    :items="getTags()"
+    @keydown="changeSearch($event)"
+    :items="tag_items"
     flat
     hide-details
     outlined
@@ -94,6 +95,7 @@
     placeholder="Search"
     :append-icon="filterIcon?'mdi-tune':undefined"
     @click:append="filter"
+    :filter="customFilter"
     >
   </v-combobox> 
 
@@ -195,6 +197,8 @@
 
 <script>
 
+import MiniSearch from 'minisearch'
+
 export default {
   props: ['logo'],
 
@@ -206,13 +210,33 @@ export default {
         tool: {}
       },
       featuresMenu: [],
+      items: [],
+      tag_items: [],
+      miniSearch: null,
     }
   },
 
-  created () {
+  async created () {
+  
+    console.log('BasicHead created')
+    
+    let tool = {}
+    let tag_items = []
+
+    let load_assets = setInterval(async ()=>{
+      await this.$store.dispatch('vxg_get_assets', tool)
+      this.items = tool.assets
+      if(this.items.length != 0) {
+        this.tag_items = this.items.map(v => v.tag)
+        this.setupMiniSearch(this.items)
+        clearInterval(load_assets)
+      } 
+    }, 111)
+    
   },
   
   mounted () {
+    
   },
   
 
@@ -285,10 +309,46 @@ export default {
       let viewtool = this.view.tool
       let tool = this.$main.seneca.util.deep(headtool, viewtool)
       return tool
-    }
+    },
+    
+    search_fields() {
+      return this.$model.main.ux.custom.search_fields
+    },
+    
   },
   
   methods: {
+  
+    setupMiniSearch(items) {
+      console.log('miniSearch created')
+      this.miniSearch = new MiniSearch({
+        fields: this.search_fields,
+        storeFields: this.search_fields,
+      })
+      this.miniSearch.addAll(items)
+
+      // console.log(this.miniSearch)
+
+    },
+    
+    // bypass default filter
+    customFilter (item, queryText, itemText) {
+      return 1
+    },
+  
+    changeSearch(event) {
+      setTimeout(()=> { // wait for input
+        let term = event.target._value
+        if(term) {
+          this.tag_items = this.miniSearch.search(term, { prefix: true, }).map(v => v.tag)
+        }
+        else {
+          this.tag_items = this.items.map(v => v.tag)
+        }
+        
+      }, 11)
+    },
+    
     filterAssets () {
       this.$store.dispatch('vxg_trigger_go')
     },
