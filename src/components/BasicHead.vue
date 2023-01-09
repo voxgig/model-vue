@@ -85,7 +85,9 @@
     ref="search"
     v-if="tool.search.active && show('search')"
     v-model="search"
-    :items="getTags()"
+    @keydown="changeSearch($event)"
+    @click:clear="changeSearch($event)"
+    :items="tag_items"
     flat
     hide-details
     outlined
@@ -94,6 +96,7 @@
     placeholder="Search"
     :append-icon="filterIcon?'mdi-tune':undefined"
     @click:append="filter"
+    :filter="customFilter"
     >
   </v-combobox> 
 
@@ -206,13 +209,32 @@ export default {
         tool: {}
       },
       featuresMenu: [],
+      items: [],
+      tag_items: [],
     }
   },
 
-  created () {
+  async created () {
+  
+    console.log('BasicHead created')
+    
+    let tool = {}
+    let tag_items = []
+
+    let load_assets = setInterval(async ()=>{
+      await this.$store.dispatch('vxg_get_assets', tool)
+      this.items = tool.assets
+      if(this.items.length != 0) {
+        this.tag_items = this.items.map(v => v.tag)
+        this.setupMiniSearch(this.items)
+        clearInterval(load_assets)
+      } 
+    }, 111)
+    
   },
   
   mounted () {
+    
   },
   
 
@@ -220,6 +242,7 @@ export default {
     '$store.state.trigger.search.term' (term) {
       if(term == '' && this.$refs.search) {
         this.$refs.search.reset()
+        this.tag_items = this.items.map(v => v.tag)
       }
     },
     search (val) {
@@ -285,10 +308,50 @@ export default {
       let viewtool = this.view.tool
       let tool = this.$main.seneca.util.deep(headtool, viewtool)
       return tool
-    }
+    },
+    
   },
   
   methods: {
+    async setupMiniSearch(items) {
+      console.log('miniSearch created')
+      
+      for(const item of items) {
+        // item = {...item}
+        this.$seneca.post('sys:search, cmd:add', { doc: item, })
+        // console.log(out)
+      }
+      // await console.log('::adding finished::')
+
+    },
+    
+    // bypass default combobox filter
+    customFilter (item, queryText, itemText) {
+      return 1
+    },
+  
+    // on-keydown and on-clear logic
+    changeSearch(event) {
+
+      setTimeout(async ()=> { // wait for input
+        let term
+        term = event.target ? event.target._value : null
+        if(term) {
+          let out = await this.$seneca.post('sys:search,cmd:search', 
+            {query: term, params: { prefix: true, // fuzzy: 0.2, 
+            },
+          })
+          // console.log('term, out: ', term, out)
+          this.tag_items = out.data.hits.map(v => v.id)
+        }
+        else {
+          this.tag_items = this.items.map(v => v.tag)
+        }
+        
+      }, 11)
+      
+    },
+    
     filterAssets () {
       this.$store.dispatch('vxg_trigger_go')
     },
