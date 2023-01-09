@@ -67,6 +67,6 @@
     "vuetify-loader": "1.7.2",
     "vuex": "3.4.0",
     "webpack-node-externals": "3.0.0",
-    "minisearch": "6.0.0"
+    "@seneca/search-mini": "0.1.2"
   }
 }
