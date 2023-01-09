@@ -309,6 +309,9 @@ export default {
       let tool = this.$main.seneca.util.deep(headtool, viewtool)
       return tool
     },
+    search_config() {
+      return this.$model.main.ux.custom.search_config
+    }
     
   },
   
@@ -337,10 +340,9 @@ export default {
         let term
         term = event.target ? event.target._value : null
         if(term) {
-          let out = await this.$seneca.post('sys:search,cmd:search', 
-            {query: term, params: { prefix: true, // fuzzy: 0.2, 
-            },
-          })
+          let out = await this.$seneca.post('sys:search, cmd:search', 
+            { query: term, params: this.search_config }
+          )
           // console.log('term, out: ', term, out)
           this.tag_items = out.data.hits.map(v => v.id)
         }
