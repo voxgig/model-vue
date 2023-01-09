@@ -86,6 +86,7 @@
     v-if="tool.search.active && show('search')"
     v-model="search"
     @keydown="changeSearch($event)"
+    @click:clear="changeSearch($event)"
     :items="tag_items"
     flat
     hide-details
@@ -197,8 +198,6 @@
 
 <script>
 
-import MiniSearch from 'minisearch'
-
 export default {
   props: ['logo'],
 
@@ -212,7 +211,6 @@ export default {
       featuresMenu: [],
       items: [],
       tag_items: [],
-      miniSearch: null,
     }
   },
 
@@ -311,42 +309,46 @@ export default {
       return tool
     },
     
-    search_fields() {
-      return this.$model.main.ux.custom.search_fields
-    },
-    
   },
   
   methods: {
-  
-    setupMiniSearch(items) {
+    async setupMiniSearch(items) {
       console.log('miniSearch created')
-      this.miniSearch = new MiniSearch({
-        fields: this.search_fields,
-        storeFields: this.search_fields,
-      })
-      this.miniSearch.addAll(items)
-
-      // console.log(this.miniSearch)
+      
+      for(const item of items) {
+        // item = {...item}
+        this.$seneca.post('sys:search, cmd:add', { doc: item, })
+        // console.log(out)
+      }
+      // await console.log('::adding finished::')
 
     },
     
-    // bypass default filter
+    // bypass default combobox filter
     customFilter (item, queryText, itemText) {
       return 1
     },
   
+    // on-keydown and on-clear logic
     changeSearch(event) {
-      setTimeout(()=> { // wait for input
-        let term = event.target._value
+
+      setTimeout(async ()=> { // wait for input
+        let term
+        term = event.target ? event.target._value : null
         if(term) {
-          this.tag_items = this.miniSearch.search(term, { prefix: true, }).map(v => v.tag)
+          let out = await this.$seneca.post('sys:search,cmd:search', 
+            {query: term, params: { prefix: true, // fuzzy: 0.2, 
+            },
+          })
+          // console.log('term, out: ', term, out)
+          this.tag_items = out.data.hits.map(v => v.id)
         }
         else {
           this.tag_items = this.items.map(v => v.tag)
         }
         
       }, 11)
+      
     },
     
     filterAssets () {
