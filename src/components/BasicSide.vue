@@ -25,6 +25,7 @@
           :key="menuView.name"
           :to="'/'+menuView.name"
           outlined 
+          :ref="menuView.name"
           class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style text-capitalize" color= "white"
           style="height: 70px;"
           >
@@ -140,6 +141,7 @@ export default {
     let route = this.findRouteName(this.$route.name) 
 
     this.menuView = this.menuViewList[route.index]
+    
   },
 
 
@@ -167,6 +169,12 @@ export default {
     '$route.name': {
       immediate: true,
       handler (val) {
+        setTimeout( ()=> {
+          if(val) {
+            this.$refs[this.findRouteName(val).name][0].$el.focus()
+          }
+        }, 11)
+        
         if(!val && this.defaultFound()) {
           this.$router.push(this.menuView.menu.default)
         }
