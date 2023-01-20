@@ -142,10 +142,6 @@ export default {
 
     this.menuView = this.menuViewList[route.index]
     
-    setTimeout( () => {
-      this.$refs[route.name][0].$el.click()
-    }, 11)
-    
   },
 
 
