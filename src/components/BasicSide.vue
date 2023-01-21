@@ -141,6 +141,7 @@ export default {
     let route = this.findRouteName(this.$route.name) 
 
     this.menuView = this.menuViewList[route.index]
+    this.menuViewIndex = route.index
     
   },
 
