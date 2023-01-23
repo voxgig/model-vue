@@ -23,8 +23,9 @@
         <v-btn
           v-for="menuView in menuViewList"
           :key="menuView.name"
-          :to="'/'+menuView.name"
+          @click="moveRoute(menuView)"
           outlined 
+          :ref="menuView.name"
           class="pa-4 text-center secondary text-no-wrap rounded-sm btn-style text-capitalize" color= "white"
           style="height: 70px;"
           >
@@ -140,6 +141,8 @@ export default {
     let route = this.findRouteName(this.$route.name) 
 
     this.menuView = this.menuViewList[route.index]
+    this.menuViewIndex = route.index
+    
   },
 
 
@@ -147,7 +150,7 @@ export default {
     menuViewIndex(index) {
       let pathname = null
       pathname = this.menuView.name
-
+      /*
       if('custom' === this.menuView.mode) {
         pathname = this.menuView.name
       }
@@ -163,6 +166,7 @@ export default {
       if(pathname && pathname !== this.$route.name ) {
         this.$router.push(pathname)
       }
+      */
     },
     '$route.name': {
       immediate: true,
@@ -174,7 +178,7 @@ export default {
         let route = this.findRouteName(val)
 
         this.menuView = this.menuViewList[route.index]
-
+        
       } 
     },
   },
@@ -219,6 +223,21 @@ export default {
   },
 
   methods: {
+    moveRoute(menuView) {
+      let path = this.$route.name
+      
+      if(menuView.mode == 'standard') {
+        if(path != menuView.menu.default) {
+          this.$router.push('/'+menuView.menu.default)
+        }
+      }
+      else if(menuView.mode == 'custom') {
+        if(path != menuView.name) {
+          this.$router.push('/'+menuView.name)
+        }
+      }
+      
+    },
   
     defaultFound() {
       return this.menuView && this.menuView.menu && this.menuView.menu.default
