@@ -321,17 +321,14 @@ export default {
     async setupMiniSearch(items, load_assets) {
       console.log('miniSearch created')
       
-      for(const item of items) {
-        // item = {...item}
-        try {
-          await this.$seneca.post('sys:search, cmd:add', { doc: item, })
-        }catch( err ) {
-          console.error(err)
-          // clearInterval(load_assets)
-          return 1
-        }
-        // console.log(out)
+      try {
+        await this.$seneca.post('sys:search, cmd:add_all', { docs: items, })
+      }catch( err ) {
+        console.error(err)
+        // clearInterval(load_assets)
+        return 1
       }
+      // console.log(out)
       return 0
       // await console.log('::adding finished::')
 
