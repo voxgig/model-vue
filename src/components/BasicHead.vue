@@ -226,7 +226,9 @@ export default {
       this.items = tool.assets
       if(this.items.length != 0) {
         this.tag_items = this.items.map(v => v.tag)
-        this.setupMiniSearch(this.items)
+        if( this.setupMiniSearch(this.items, load_assets) ) {
+          clearInterval(load_assets)
+        }
         clearInterval(load_assets)
       } 
     }, 111)
@@ -316,14 +318,18 @@ export default {
   },
   
   methods: {
-    async setupMiniSearch(items) {
+    async setupMiniSearch(items, load_assets) {
       console.log('miniSearch created')
       
-      for(const item of items) {
-        // item = {...item}
-        this.$seneca.post('sys:search, cmd:add', { doc: item, })
-        // console.log(out)
+      try {
+        await this.$seneca.post('sys:search, cmd:add_all', { docs: items, })
+      }catch( err ) {
+        console.error(err)
+        // clearInterval(load_assets)
+        return 1
       }
+      // console.log(out)
+      return 0
       // await console.log('::adding finished::')
 
     },
