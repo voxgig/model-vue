@@ -127,8 +127,6 @@ export default {
   },
   
   created () {
-    console.log('BasicSide created', this.spec)
-    
     let menuViewList = []
     for(let name in this.spec.view) {
       let menuView = this.spec.view[name]
@@ -136,8 +134,6 @@ export default {
       menuViewList.push(menuView)
     }
     this.menuViewList = menuViewList
-    console.log("menuViewList", this.menuViewList)
-
     let route = this.findRouteName(this.$route.name) 
 
     this.menuView = this.menuViewList[route.index]
@@ -176,9 +172,8 @@ export default {
         }
         
         let route = this.findRouteName(val)
-
-        this.menuView = this.menuViewList[route.index]
         
+        this.menuView = this.menuViewList[route.index]
       } 
     },
   },

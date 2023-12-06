@@ -198,6 +198,12 @@
 
 <script>
 
+
+function tag_alias(asset) {
+  return asset.tag+(''==asset.custom12?'':' ('+asset.custom12+')')
+}
+
+
 export default {
   props: ['logo'],
 
@@ -215,9 +221,6 @@ export default {
   },
 
   async created () {
-  
-    console.log('BasicHead created')
-    
     let tool = {}
     let tag_items = []
 
@@ -225,7 +228,8 @@ export default {
       await this.$store.dispatch('vxg_get_assets', tool)
       this.items = tool.assets
       if(this.items.length != 0) {
-        this.tag_items = this.items.map(v => v.tag)
+        // this.tag_items = this.items.map(v => v.tag+(''==v.custom12?'':' ('+v.custom12+')'))
+        this.tag_items = this.items.map(tag_alias)
         this.setupMiniSearch(this.items)
         clearInterval(load_assets)
       } 
@@ -242,11 +246,18 @@ export default {
     '$store.state.trigger.search.term' (term) {
       if(term == '' && this.$refs.search) {
         this.$refs.search.reset()
-        this.tag_items = this.items.map(v => v.tag)
+        // this.tag_items = this.items.map(v => v.tag)
+        this.tag_items = this.items.map(tag_alias)
       }
     },
     search (val) {
-      this.$store.dispatch('trigger_search', {term:this.search})
+      let term = val
+      let m = term.match(/^([^(]+)\s*\([^)]+\)$/)
+      if(m) {
+        term = m[1].trim()
+      }
+      // this.$store.dispatch('trigger_search', {term:this.search})
+      this.$store.dispatch('trigger_search', {term})
     },
     select () {
       this.$store.dispatch('trigger_select', {value:this.select})
@@ -317,15 +328,10 @@ export default {
   
   methods: {
     async setupMiniSearch(items) {
-      console.log('miniSearch created')
-      
       for(const item of items) {
         // item = {...item}
         this.$seneca.post('sys:search, cmd:add', { doc: item, })
-        // console.log(out)
       }
-      // await console.log('::adding finished::')
-
     },
     
     // bypass default combobox filter
@@ -343,11 +349,12 @@ export default {
           let out = await this.$seneca.post('sys:search, cmd:search', 
             { query: term, params: this.search_config }
           )
-          // console.log('term, out: ', term, out)
-          this.tag_items = out.data.hits.map(v => v.id)
+          // this.tag_items = out.data.hits.map(v => v.id)
+          this.tag_items = out.data.hits.map(v=>tag_alias(v.doc))
         }
         else {
-          this.tag_items = this.items.map(v => v.tag)
+          // this.tag_items = this.items.map(v => v.tag)
+          this.tag_items = this.items.map(tag_alias)
         }
         
       }, 11)
@@ -399,7 +406,6 @@ export default {
           return items
         }, items)
       }
-      console.log('selectItems', items)
       return items
     },
 

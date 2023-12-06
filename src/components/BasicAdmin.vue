@@ -38,6 +38,7 @@ export default {
   },
 
   created () {
+    console.log('BasicAdmin side', this.spec.parts)
   },
 
   computed: {

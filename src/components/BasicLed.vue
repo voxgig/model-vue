@@ -456,7 +456,6 @@ export default {
         out = this.$vxg.allow(match)
       }
 
-      // console.log(this.item, action, field)
       if(action == 'edit' && field && field.edit === false) {
         if(this.item.created) {
           out = false
@@ -486,8 +485,6 @@ export default {
           return 1
         })
       }
-
-      // console.log(this.customInfoFields, chs)
 
       return chs
     },

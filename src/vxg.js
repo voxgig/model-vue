@@ -19,6 +19,8 @@ const config_defaults = {}
 
 const util = {}
 
+console.log('VXG 01')
+
 class Vxg {
   constructor(config) {
     this.match = {

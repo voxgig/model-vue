@@ -19,10 +19,12 @@
 <script>
 export default {
   props: {
+    /*
     spec: {
       type: Object,
       required: true,
-    }
+      }
+      */
   },
   
   data () {
