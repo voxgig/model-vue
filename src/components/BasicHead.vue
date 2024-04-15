@@ -64,7 +64,7 @@
     v-if="show('addmobile') && tool.add.active"
     tile
     class="vxg-head-btn"
-    @click="addItem"
+    @click="addMobileAsset"
     >
     <v-icon left medium>
       mdi-map-marker-path
