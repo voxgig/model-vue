@@ -60,6 +60,18 @@
     Add {{ itemName }}
   </v-btn>
   
+  <v-btn
+    v-if="show('addmobile') && tool.add.active"
+    tile
+    class="vxg-head-btn"
+    @click="addItem"
+    >
+    <v-icon left medium>
+      mdi-map-marker-path
+    </v-icon>
+    Add Mobile Asset
+  </v-btn>
+
   <v-divider
     v-if="show('add') && tool.add.active"
     vertical style="margin:0px 16px;"></v-divider>
@@ -392,6 +404,10 @@ export default {
 
     addItem () {
       this.$store.dispatch('trigger_led_add')
+    },
+
+    addMobileAsset () {
+      this.$store.dispatch('trigger_led_add_mobile')
     },
 
     removeItem () {
