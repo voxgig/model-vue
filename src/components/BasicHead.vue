@@ -57,7 +57,7 @@
     <v-icon left medium>
       mdi-map-marker-path
     </v-icon>
-    Add {{ itemName }}
+    Add {{ itemName == 'Asset' ? 'Fixed Asset' : itemName }}
   </v-btn>
   
   <v-btn
@@ -201,6 +201,7 @@
     color: rgb(var(--vxg-ct0));
     text-transform: none !important;
     box-shadow: none !important;
+    margin-left: 10px;
     
     .v-icon {
         color: rgb(var(--vxg-ci0)) !important;
