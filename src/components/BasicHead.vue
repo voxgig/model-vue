@@ -213,7 +213,10 @@
 
 
 function tag_alias(asset) {
-  return asset.tag+(''==asset.custom12?'':' ('+asset.custom12+')')
+   if(null != asset.custom12) {
+    return asset.tag + '(' + asset.custom12 + ')'
+  }
+  return asset.tag
 }
 
 
@@ -264,11 +267,13 @@ export default {
       }
     },
     search (val) {
-      let term = val
-      let m = term.match(/^([^(]+)\s*\([^)]+\)$/)
-      if(m) {
-        term = m[1].trim()
-      }
+      let term = val || ''
+      term.trim()
+      // Todo: is it necessary?
+      // let m = term.match(/^([^(]+)\s*\([^)]+\)$/)
+      // if(m) {
+      //   term = m[1].trim()
+      // }
       // this.$store.dispatch('trigger_search', {term:this.search})
       this.$store.dispatch('trigger_search', {term})
     },
