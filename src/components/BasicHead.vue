@@ -269,7 +269,7 @@ export default {
     search (val) {
       let term = val || ''
       term.trim()
-      // Todo: is it necessary?
+      // Todo: Is it necessary?
       // let m = term.match(/^([^(]+)\s*\([^)]+\)$/)
       // if(m) {
       //   term = m[1].trim()
