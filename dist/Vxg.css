@@ -18,6 +18,7 @@ html {
   text-transform: none !important;
   -webkit-box-shadow: none !important;
           box-shadow: none !important;
+  margin-left: 10px;
 }
 .vxg-head-btn .v-icon {
   color: rgb(var(--vxg-ci0)) !important;
