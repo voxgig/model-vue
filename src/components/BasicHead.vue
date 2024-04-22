@@ -57,9 +57,21 @@
     <v-icon left medium>
       mdi-map-marker-path
     </v-icon>
-    Add {{ itemName }}
+    Add {{ itemName == 'Asset' ? 'Fixed Asset' : itemName }}
   </v-btn>
   
+  <v-btn
+    v-if="show('addmobile') && tool.add.active"
+    tile
+    class="vxg-head-btn"
+    @click="addMobileAsset"
+    >
+    <v-icon left medium>
+      mdi-map-marker-path
+    </v-icon>
+    Add Mobile Asset
+  </v-btn>
+
   <v-divider
     v-if="show('add') && tool.add.active"
     vertical style="margin:0px 16px;"></v-divider>
@@ -189,6 +201,7 @@
     color: rgb(var(--vxg-ct0));
     text-transform: none !important;
     box-shadow: none !important;
+    margin-left: 10px;
     
     .v-icon {
         color: rgb(var(--vxg-ci0)) !important;
@@ -200,7 +213,10 @@
 
 
 function tag_alias(asset) {
-  return asset.tag+(''==asset.custom12?'':' ('+asset.custom12+')')
+   if(null != asset.custom12) {
+    return asset.tag + '(' + asset.custom12 + ')'
+  }
+  return asset.tag
 }
 
 
@@ -251,11 +267,13 @@ export default {
       }
     },
     search (val) {
-      let term = val
-      let m = term.match(/^([^(]+)\s*\([^)]+\)$/)
-      if(m) {
-        term = m[1].trim()
-      }
+      let term = val || ''
+      term.trim()
+      // Todo: is it necessary?
+      // let m = term.match(/^([^(]+)\s*\([^)]+\)$/)
+      // if(m) {
+      //   term = m[1].trim()
+      // }
       // this.$store.dispatch('trigger_search', {term:this.search})
       this.$store.dispatch('trigger_search', {term})
     },
@@ -392,6 +410,10 @@ export default {
 
     addItem () {
       this.$store.dispatch('trigger_led_add')
+    },
+
+    addMobileAsset () {
+      this.$store.dispatch('trigger_led_add_mobile')
     },
 
     removeItem () {
